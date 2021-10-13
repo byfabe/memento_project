@@ -1,11 +1,17 @@
 <template>
   <div class="container-main">
-    <div @mousewheel="scrollColor" class="workspace w1"></div>
+    <div @mousewheel="scrollColor" class="workspace w1">
+      <div @mousemove="dragPost" class="box"></div>
+    </div>
   </div>
 </template>
 
 <script>
 //import { mapGetters } from "vuex";
+import { gsap } from "gsap";
+import { Draggable } from "gsap/Draggable";
+gsap.registerPlugin(Draggable);
+
 export default {
   data() {
     return {};
@@ -18,12 +24,21 @@ export default {
         document.location.href = "/#/divers";
       }
     },
+    dragPost() {
+      Draggable.create(".box", {
+        type: "x,y",
+        edgeResistance: 0.65,
+        bounds: ".container-main",
+        inertia: true,
+      });
+      console.log(document.querySelector('.box'));
+    },
   },
   computed: {},
   mounted: function () {
     let iconMenu = document.querySelectorAll(".icon-menu-all");
     for (let i = 0; i < iconMenu.length; i++) {
-      iconMenu[i].classList.remove('icon-menu2', 'icon-menu3');
+      iconMenu[i].classList.remove("icon-menu2", "icon-menu3");
       iconMenu[i].classList.add("icon-menu");
     }
   },
@@ -43,27 +58,12 @@ export default {
       hsla(0, 87%, 73%, 1) 100%
     );
   }
-  & .w2 {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      hsla(171, 87%, 67%, 1) 0%,
-      hsla(236, 100%, 72%, 1) 100%
-    );
-  }
-  & .w3 {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      hsla(145, 84%, 73%, 1) 0%,
-      hsla(150, 61%, 48%, 1) 100%
-    );
-  }
 }
-.display {
-  display: none;
+.box {
+  width: 100px;
+  height: 100px;
+  background-color: orchid;
+  border-radius: 10px;
 }
 </style>
 
