@@ -1,12 +1,13 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
 
 export default createStore({
   state: {
+    workspace: ["w1", "w2", "w3"],
   },
-  mutations: {
+  getters: {
+    getWorkspace: (state) => state.workspace,
   },
-  actions: {
-  },
-  modules: {
-  }
-})
+  mutations: {},
+  actions: {},
+  modules: {},
+});

@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <Background />
+    <Backgroundone />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Background from '@/components/Background.vue'
+import Backgroundone from '@/components/Backgroundone.vue'
 
 export default {
-  name: 'Home',
+  name: 'Workspaceone',
   components: {
-    Background
+    Backgroundone
   }
 }
 </script>

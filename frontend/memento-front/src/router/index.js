@@ -1,11 +1,23 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import Workspaceone from '../views/Workspaceone.vue'
+import Workspacetwo from '../views/Workspacetwo.vue'
+import Workspacethree from '../views/Workspacethree.vue'
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: '/loisir',
+    name: 'Workspaceone',
+    component: Workspaceone
+  },
+  {
+    path: '/travail',
+    name: 'Workspacetwo',
+    component: Workspacetwo
+  },
+  {
+    path: '/divers',
+    name: 'Workspacethree',
+    component: Workspacethree
   },
 ]
 
