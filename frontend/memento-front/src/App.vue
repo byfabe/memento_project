@@ -35,7 +35,4 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-#nav {
-  position: relative;
-}
 </style>

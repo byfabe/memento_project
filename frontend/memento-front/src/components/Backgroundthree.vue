@@ -26,6 +26,7 @@ export default {
       iconMenu[i].classList.remove("icon-menu", "icon-menu2");
       iconMenu[i].classList.add("icon-menu3");
     }
+    document.querySelector('.container-main-nav').classList.remove('display')
   },
 };
 </script>

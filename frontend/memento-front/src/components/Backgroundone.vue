@@ -41,6 +41,7 @@ export default {
       iconMenu[i].classList.remove("icon-menu2", "icon-menu3");
       iconMenu[i].classList.add("icon-menu");
     }
+    document.querySelector('.container-main-nav').classList.remove('display')
   },
 };
 </script>
