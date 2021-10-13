@@ -5,29 +5,28 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+//import { mapGetters } from "vuex";
 export default {
   data() {
-    return {
-        workspaces: []
-    };
+    return {};
   },
   methods: {
     scrollColor(e) {
-        if (e.deltaY > 0) {
-            document.location.href = "/#/divers"
-        } else if (e.deltaY < 0) {
-            document.location.href = "/#/loisir"
-        }
+      if (e.deltaY > 0) {
+        document.location.href = "/#/divers";
+      } else if (e.deltaY < 0) {
+        document.location.href = "/#/loisir";
+      }
     },
   },
-  computed: {
-    ...mapGetters(["getWorkspace"]),
+  computed: {},
+  mounted: function () {
+    let iconMenu = document.querySelectorAll(".icon-menu-all");
+    for (let i = 0; i < iconMenu.length; i++) {
+      iconMenu[i].classList.remove('icon-menu', 'icon-menu3');
+      iconMenu[i].classList.add("icon-menu2");
+    }
   },
-  created: function() {
-      this.workspaces = this.getWorkspace
-      console.log(this.getWorkspace);
-  }
 };
 </script>
 
