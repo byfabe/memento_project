@@ -10,8 +10,8 @@
       <div class="container-form">
         <form action="">
           <div class="content-form">
-            <label for="user">Nom d'utilisateur</label>
-            <input @input="input" name="user" type="text" id="user" required />
+            <label for="mail">E-mail</label>
+            <input @input="input" name="mail" type="text" id="mail" required />
           </div>
           <div class="content-form">
             <label for="password">Mot de passe</label>
