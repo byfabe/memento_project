@@ -1,35 +1,41 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import Workspaceone from '../views/Workspaceone.vue'
-import Workspacetwo from '../views/Workspacetwo.vue'
-import Workspacethree from '../views/Workspacethree.vue'
-import Login from '../views/Login.vue'
+import { createRouter, createWebHashHistory } from "vue-router";
+import Workspaceone from "../views/Workspaceone.vue";
+import Workspacetwo from "../views/Workspacetwo.vue";
+import Workspacethree from "../views/Workspacethree.vue";
+import Signup from "../views/Signup.vue";
+import Signin from "../views/Signin.vue";
 
 const routes = [
   {
-    path: '/',
-    name: 'Login',
-    component: Login
+    path: "/",
+    name: "Signup",
+    component: Signup,
   },
   {
-    path: '/loisir',
-    name: 'Workspaceone',
-    component: Workspaceone
+    path: "/signin",
+    name: "Signin",
+    component: Signin,
   },
   {
-    path: '/travail',
-    name: 'Workspacetwo',
-    component: Workspacetwo
+    path: "/loisir",
+    name: "Workspaceone",
+    component: Workspaceone,
   },
   {
-    path: '/divers',
-    name: 'Workspacethree',
-    component: Workspacethree
+    path: "/travail",
+    name: "Workspacetwo",
+    component: Workspacetwo,
   },
-]
+  {
+    path: "/divers",
+    name: "Workspacethree",
+    component: Workspacethree,
+  },
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-})
+});
 
-export default router
+export default router;

@@ -11,16 +11,26 @@
         <form action="">
           <div class="content-form">
             <label for="mail">E-mail</label>
-            <input @input="input" name="mail" type="text" id="mail" required />
+            <input
+              @input="input"
+              name="mail"
+              type="text"
+              id="mail"
+              required
+              v-model="email"
+              :placeholder="[[placeholderMail]]"
+            />
           </div>
           <div class="content-form">
             <label for="password">Mot de passe</label>
             <input
               @input="input"
               name="password"
-              type="text"
+              type="password"
               id="password"
               required
+              v-model="password"
+              :placeholder="[[placeholderPass]]"
             />
           </div>
           <div class="content-form">
@@ -28,20 +38,33 @@
             <input
               @input="input"
               name="password"
-              type="text"
+              type="password"
               id="confirm-password"
               required
+              v-model="confirmPassword"
+              :placeholder="[[placeholderConfirmPass]]"
             />
           </div>
           <div class="content-form">
-            <button class="btn-form">Valider</button>
+            <button
+              @click="
+                emailValidation();
+                passValidation();
+                passConfirmValidation();
+                validation();
+              "
+              :disabled="!isComplete"
+              class="btn-form"
+            >
+              Valider
+            </button>
           </div>
         </form>
       </div>
       <div class="forgotpassword">
         <a href="">Mot de passe oublié ?</a>
         <span class="space-forgotpassword">|</span>
-        <a href="">Se connecter</a>
+        <a href="#/signin">Se connecter</a>
       </div>
     </div>
   </div>
@@ -49,13 +72,81 @@
 
 <script>
 export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      placeholderMail: "",
+      placeholderPass: "",
+      placeholderConfirmPass: "",
+    };
+  },
   methods: {
     input(e) {
-      if (e.target.value != "") {
+      if (this.email || this.placeholderMail != "") {
         e.target.parentNode.classList.add("animation");
-      } else if (e.target.value == "") {
+      } else if (this.email || this.placeholderMail == "") {
         e.target.parentNode.classList.remove("animation");
       }
+    },
+    emailValidation() {
+      if (/.+@.+/.test(this.email)) {
+        this.placeholderMail = "";
+        return true;
+      } else {
+        this.email = "";
+        this.placeholderMail = "Email incorrect";
+        return false;
+      }
+    },
+    passValidation() {
+      if (this.password >= 8) {
+        this.placeholderPass = "";
+        return true;
+      } else {
+        this.password = "";
+        this.placeholderPass = "Min. 8 caractères";
+        return false;
+      }
+    },
+    passConfirmValidation() {
+      if (this.confirmPassword === this.password) {
+        this.placeholderConfirmPass = "";
+        return true;
+      } else {
+        this.confirmPassword = "";
+        this.placeholderConfirmPass = "Mot de passe non identique";
+        return false;
+      }
+    },
+    validation() {
+      if (
+        this.emailValidation() &&
+        this.passValidation() &&
+        this.passConfirmValidation() === true
+      ) {
+        let valueForm = {
+          email: this.email,
+          password: this.password,
+        };
+        this.$store
+          .dispatch("fetchAuth", {
+            endpoint: "auth/signup",
+            valueForm: valueForm,
+            method: "POST",
+          })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("dataOK", data);
+          });
+        document.location.href = "#/loisir";
+      }
+    },
+  },
+  computed: {
+    isComplete() {
+      return this.email != "" && this.password != "";
     },
   },
   mounted: function () {
@@ -64,16 +155,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.display {
-  display: none;
-}
+<style scoped lang="scss">
+
 .container-main-signup {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  width: 100%;
+  width: clamp(600px, 100vw, 100vw);
   height: 100vh;
   background: linear-gradient(
     90deg,
@@ -89,11 +178,14 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: space-around;
     width: clamp(600px, 35%, 800px);
     height: clamp(470px, 470px, 600px);
+    min-height: 470px;
+    margin-bottom: 150px;
     box-shadow: 13px 11px 40px -8px #501831;
     border-radius: 20px;
-    margin-bottom: 5%;
+
     & .text-info-signup {
       width: 82%;
       height: 50px;
@@ -139,11 +231,14 @@ export default {
       font-size: clamp(12px, 0.8vw, 15px);
       font-family: "Raleway", sans-serif;
       transition: 0.4s ease-out;
+      &::-webkit-input-placeholder {
+        color: rgba(255, 0, 0, 0.774);
+      }
     }
     &:nth-child(4) {
       justify-content: center;
-      margin-bottom: 50px;
-      margin-top: 50px;
+      margin-bottom: 20px;
+      margin-top: 40px;
     }
     & .btn-form {
       width: 110px;
@@ -155,6 +250,10 @@ export default {
       padding: 15px;
       border: 2px solid #fbcfc9;
       border-radius: 30px;
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.2;
+      }
     }
     &:focus-within label,
     &.animation label {
@@ -169,6 +268,7 @@ export default {
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-bottom: 15px;
   & .space-forgotpassword {
     margin: 0 8px 0 8px;
     color: #501831;
