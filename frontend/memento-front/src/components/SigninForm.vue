@@ -95,24 +95,22 @@ export default {
       }
     },
     validation() {
-      if (
-        this.emailValidation() &&
-        this.passValidation() === true
-      ) {
-        let valueForm = {
-          email: this.email,
-          password: this.password,
-        };
-        this.$store
-          .dispatch("fetchAuth", {
-            endpoint: "auth/login",
-            valueForm: valueForm,
-            method: "POST",
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("dataOK", data);
-          });
+      if (this.emailValidation() && this.passValidation() === true) {
+        // let valueForm = {
+        //   email: this.email,
+        //   password: this.password,
+        // };
+        // this.$store
+        //   .dispatch("fetchAuth", {
+        //     endpoint: "auth/login",
+        //     valueForm: valueForm,
+        //     method: "POST",
+        //   })
+        //   .then((response) => response.json())
+        //   .then((data) => {
+        //     this.$store.commit("ADD_PROFILE", data);
+        //     console.log("dataOK", data);
+        //   });
         document.location.href = "#/loisir";
       }
     },
@@ -127,7 +125,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .container-main-signup {
   display: flex;
   flex-direction: column;

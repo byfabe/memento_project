@@ -10,7 +10,9 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      text: "ok"
+    };
   },
   methods: {
     addPost() {
@@ -25,11 +27,26 @@ export default {
       let color = classColor[Math.floor(Math.random() * classColor.length)];
       let randomLeft = Math.floor(Math.random() * 60 ) + 20
       let randomTop = Math.floor(Math.random() * 60 ) + 20
+       //20 correspond au nombre min
+       //60 correspond au nombre de possibilités
       setAttributes(post, {
         class: `box ${color}`,
         style: `left: ${randomLeft}%; top: ${randomTop}%`,
       });
       parent.appendChild(post);
+      let valueForm = {
+          text: this.text
+        };
+      this.$store
+          .dispatch("fetchPost", {
+            endpoint: "post/",
+            valueForm: valueForm,
+            method: "POST",
+          })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("dataOK", data);
+          });
       this.$emit("newPost");
     },
   },
@@ -49,7 +66,7 @@ export default {
   position: absolute;
   top: 20%;
   width: clamp(150px, 15vw, 200px);
-  height: 40%;
+  height: clamp(200px, 40%, 500px);
   box-shadow: 13px 11px 32px -8px rgba(0, 0, 0, 0.507);
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;

@@ -2,8 +2,6 @@
   <div class="container-main">
     <Navlink v-on:newPost="newPost" />
     <div @mousewheel="scrollColor" class="workspace w1">
-      <div class="box" style="left: 50%; top: 50%"></div>
-      <div class="box" style="left: 50%; top: 50%"></div>
     </div>
   </div>
 </template>
