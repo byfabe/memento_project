@@ -1,7 +1,9 @@
 <template>
   <div class="container-main">
+    <Navlink v-on:newPost="newPost" />
     <div @mousewheel="scrollColor" class="workspace w1">
-      <div @mousemove="dragPost" class="box" style="left: 50%; top: 50%"></div>
+      <div class="box" style="left: 50%; top: 50%"></div>
+      <div class="box" style="left: 50%; top: 50%"></div>
     </div>
   </div>
 </template>
@@ -10,13 +12,27 @@
 //import { mapGetters } from "vuex";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
+import Navlink from "./Navlink.vue";
 gsap.registerPlugin(Draggable);
- 
+
 export default {
+  components: { Navlink },
+  setup() {},
   data() {
-    return {};
+    return {
+      Xpercent: 0,
+      Ypercent: 0,
+    };
   },
   methods: {
+    newPost() {
+      let boxes = document.querySelectorAll(".box");
+      boxes.forEach((box) => {
+        box.addEventListener("mousemove", (e) => {
+          this.dragPost(e.target);
+        });
+      });
+    },
     scrollColor(e) {
       if (e.deltaY > 0) {
         document.location.href = "/#/travail";
@@ -24,40 +40,32 @@ export default {
         document.location.href = "/#/divers";
       }
     },
-    dragPost() {
+    dragPost(box) {
       Draggable.create(".box", {
         type: "x,y",
         edgeResistance: 0.65,
         bounds: ".container-main",
         inertia: true,
       });
-      let box = document.querySelector('.box');
       let x = box.getBoundingClientRect().x;
       let y = box.getBoundingClientRect().y;
-      let containerMain = document.querySelector('.container-main');
+      let containerMain = document.querySelector(".container-main");
       let w = containerMain.getBoundingClientRect().width;
       let h = containerMain.getBoundingClientRect().height;
-      let Xpercent = Math.round(x / w * 100);
-      let Ypercent = Math.round(y / h * 100);
-      console.log("x",Xpercent + "%","y", Ypercent + "%");
-      //let bound = document.querySelector('.container-main')
-      //console.log(w);
+      this.Xpercent = Math.round((x / w) * 100);
+      this.Ypercent = Math.round((y / h) * 100);
+      console.log("x", this.Xpercent + "%", "y", this.Ypercent + "%");
     },
   },
-  computed: {
-    
-  },
+  computed: {},
   mounted: function () {
     let iconMenu = document.querySelectorAll(".icon-menu-all");
     for (let i = 0; i < iconMenu.length; i++) {
       iconMenu[i].classList.remove("icon-menu2", "icon-menu3");
       iconMenu[i].classList.add("icon-menu");
     }
-    document.querySelector('.container-main-nav').classList.remove('display')
-    // let box = document.querySelector('.box');
-    // box.style.position = "absolute";
-    // box.style.top = 50 + "%"
-    // box.style.left = 20 + "%"
+    document.querySelector(".container-main-nav").classList.remove("display");
+    this.newPost();
   },
 };
 </script>
@@ -77,12 +85,25 @@ export default {
     );
   }
 }
-.box {
+/deep/ .box {
   position: absolute;
   width: 100px;
   height: 100px;
   background-color: orchid;
   border-radius: 10px;
   transform: translateX(-50%) translateY(-50%);
+  z-index: 2000;
+}
+/deep/ .red{
+  background: red
+}
+/deep/ .blue {
+  background: blue;
+}
+/deep/ .yellow {
+  background: yellow;
+}
+/deep/ .green {
+  background: green;
 }
 </style>

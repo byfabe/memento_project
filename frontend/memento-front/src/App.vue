@@ -5,19 +5,11 @@
         <component :is="Component"></component>
       </transition>
     </router-view>
-    <Navlink/>
+
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import Navlink from '@/components/Navlink.vue'
-
-export default {
-  components: {
-    Navlink
-  }
-}
 </script>
 
 <style lang="scss">

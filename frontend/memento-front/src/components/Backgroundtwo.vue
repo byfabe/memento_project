@@ -1,12 +1,15 @@
 <template>
   <div class="container-main">
+    <Navlink/>
     <div @mousewheel="scrollColor" class="workspace w2"></div>
   </div>
 </template>
 
 <script>
+import Navlink from './Navlink.vue';
 //import { mapGetters } from "vuex";
 export default {
+  components: { Navlink },
   data() {
     return {};
   },
@@ -26,7 +29,6 @@ export default {
       iconMenu[i].classList.remove('icon-menu', 'icon-menu3');
       iconMenu[i].classList.add("icon-menu2");
     }
-    document.querySelector('.container-main-nav').classList.remove('display')
   },
 };
 </script>

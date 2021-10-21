@@ -122,9 +122,7 @@ export default {
       return this.email != "" && this.password != "";
     },
   },
-  mounted: function () {
-    document.querySelector(".container-main-nav").classList.add("display");
-  },
+  mounted: function () {},
 };
 </script>
 
