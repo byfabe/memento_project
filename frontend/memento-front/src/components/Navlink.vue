@@ -17,6 +17,14 @@ export default {
   methods: {
     addPost() {
       let post = document.createElement("div");
+      post.innerHTML = 
+      `<textarea
+          class="input-box"
+          name="text-box"
+          id="text-box"
+          rows="10"
+          maxlength="65"
+        ></textarea>`;
       let parent = document.querySelector(".workspace");
       function setAttributes(el, options) {
         Object.keys(options).forEach(function (attr) {
@@ -47,7 +55,7 @@ export default {
           .then((data) => {
             console.log("dataOK", data);
           });
-      this.$emit("newPost");
+      this.$emit("newPost", post);
     },
   },
 };
@@ -67,7 +75,7 @@ export default {
   top: 20%;
   width: clamp(150px, 15vw, 200px);
   height: clamp(200px, 40%, 500px);
-  box-shadow: 13px 11px 32px -8px rgba(0, 0, 0, 0.507);
+  box-shadow: 13px 11px 15px -8px rgba(0, 0, 0, 0.100);
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   & .plus {
