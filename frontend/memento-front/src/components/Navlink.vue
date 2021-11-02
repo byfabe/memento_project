@@ -16,46 +16,47 @@ export default {
   },
   methods: {
     addPost() {
-      let post = document.createElement("div");
-      post.innerHTML = 
-      `<textarea
-          class="input-box"
-          name="text-box"
-          id="text-box"
-          rows="10"
-          maxlength="65"
-        ></textarea>`;
-      let parent = document.querySelector(".workspace");
-      function setAttributes(el, options) {
-        Object.keys(options).forEach(function (attr) {
-          el.setAttribute(attr, options[attr]);
-        });
-      }
-      let classColor = ["red", "blue", "yellow", "green"];
-      let color = classColor[Math.floor(Math.random() * classColor.length)];
-      let randomLeft = Math.floor(Math.random() * 60 ) + 20
-      let randomTop = Math.floor(Math.random() * 60 ) + 20
-       //20 correspond au nombre min
-       //60 correspond au nombre de possibilités
-      setAttributes(post, {
-        class: `box ${color}`,
-        style: `left: ${randomLeft}%; top: ${randomTop}%`,
-      });
-      parent.appendChild(post);
-      let valueForm = {
-          text: this.text
-        };
-      this.$store
-          .dispatch("fetchPost", {
-            endpoint: "post/",
-            valueForm: valueForm,
-            method: "POST",
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("dataOK", data);
-          });
-      this.$emit("newPost", post);
+      // let post = document.createElement("div");
+      // post.innerHTML = 
+      // `<textarea
+      //     class="input-box"
+      //     v-model="alltext"
+      //     name="text-box"
+      //     id="text-box"
+      //     rows="10"
+      //     maxlength="65"
+      //   ></textarea>`;
+      // let parent = document.querySelector(".workspace");
+      // function setAttributes(el, options) {
+      //   Object.keys(options).forEach(function (attr) {
+      //     el.setAttribute(attr, options[attr]);
+      //   });
+      // }
+      // let classColor = ["red", "blue", "yellow", "green"];
+      // let color = classColor[Math.floor(Math.random() * classColor.length)];
+      // let randomLeft = Math.floor(Math.random() * 60 ) + 20
+      // let randomTop = Math.floor(Math.random() * 60 ) + 20
+      //  //20 correspond au nombre min
+      //  //60 correspond au nombre de possibilités
+      // setAttributes(post, {
+      //   class: `box ${color}`,
+      //   style: `left: ${randomLeft}%; top: ${randomTop}%`,
+      // });
+      // parent.appendChild(post);
+      // let valueForm = {
+      //     text: this.text
+      //   };
+      // this.$store
+      //     .dispatch("fetchPost", {
+      //       endpoint: "post/",
+      //       valueForm: valueForm,
+      //       method: "POST",
+      //     })
+      //     .then((response) => response.json())
+      //     .then((data) => {
+      //       console.log("dataOK", data);
+      //     });
+      this.$emit("newPost");
     },
   },
 };

@@ -1,7 +1,25 @@
 <template>
   <div class="container-main">
-    <Navlink v-on:newPost="newPost" />
-    <div @mousewheel="scrollColor" class="workspace w1"></div>
+    <Navlink v-on:newPost="addPost" />
+    <div @mousewheel="scrollColor" class="workspace w1">
+      <div
+        class="box"
+        :class="postColor"
+        v-for="post in posts"
+        :key="post"
+        @click="newPost(post, $event)"
+        @mousemove="dragPost(post, $event)"
+      >
+        <textarea
+          class="input-box"
+          v-model="post.value"
+          name="text-box"
+          id="text-box"
+          rows="10"
+          maxlength="65"
+        ></textarea>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -17,12 +35,21 @@ export default {
   setup() {},
   data() {
     return {
+      classColor: ["red", "blue", "yellow", "green"],
+      posts: [],
       Xpercent: 0,
       Ypercent: 0,
     };
   },
   methods: {
-    newPost(element) {
+    addPost() {
+      this.posts.push({ value: "" });
+      console.log(this.posts);
+    },
+    // Récupération d'un nouveau post
+    newPost(post, event) {
+      let element = event.target
+      console.log(element);
       Draggable.create(element, {
         type: "x,y",
         edgeResistance: 0.65,
@@ -31,9 +58,10 @@ export default {
         dragClickables: false,
         onDragEnd: () => this.movePost(element), //la fonction du kiff
       });
-      element.addEventListener("mousemove", (e) => {
-        this.dragPost(e.target);
-      });
+      // element.addEventListener("mousemove", (e) => {
+      //   this.dragPost(e.target);
+      // });
+      // Animation du nouveau post
       const tl = gsap.timeline();
       tl.from(element, {
         opacity: 0,
@@ -42,6 +70,7 @@ export default {
         duration: 1,
       });
     },
+    // Changement de page au scroll
     scrollColor(e) {
       if (e.deltaY > 0) {
         document.location.href = "/#/travail";
@@ -49,7 +78,9 @@ export default {
         document.location.href = "/#/divers";
       }
     },
-    dragPost(box) {
+    // Calcul de la position des post
+    dragPost(div, event) {
+      let box = event.target
       let x = box.getBoundingClientRect().x;
       let y = box.getBoundingClientRect().y;
       let containerMain = document.querySelector(".container-main");
@@ -57,8 +88,9 @@ export default {
       let h = containerMain.getBoundingClientRect().height;
       this.Xpercent = Math.round((x / w) * 100);
       this.Ypercent = Math.round((y / h) * 100);
-      console.log("x", this.Xpercent + "%", "y", this.Ypercent + "%");
+      //console.log("x", this.Xpercent + "%", "y", this.Ypercent + "%");
     },
+    // Animation des post en relachant le click de la souris avec "onDragEnd" (dans la fonction "newPost")
     movePost(box) {
       const tl = gsap.timeline({ yoyo: true });
       tl.from(box, {
@@ -68,13 +100,21 @@ export default {
       });
     },
   },
-  computed: {},
+  computed: {
+    postColor() {
+      return this.classColor[
+        Math.floor(Math.random() * this.classColor.length)
+      ];
+    },
+  },
   mounted: function () {
+    // Changement de la couleur du menu en fonction de la page
     let iconMenu = document.querySelectorAll(".icon-menu-all");
     for (let i = 0; i < iconMenu.length; i++) {
       iconMenu[i].classList.remove("icon-menu2", "icon-menu3");
       iconMenu[i].classList.add("icon-menu");
     }
+    // Suppression de la classe "display" pour faire apparaitre le menu
     document.querySelector(".container-main-nav").classList.remove("display");
   },
 };
