@@ -11,7 +11,7 @@
 export default {
   data() {
     return {
-      text: "ok"
+      text: ""
     };
   },
   methods: {
@@ -43,20 +43,21 @@ export default {
       //   style: `left: ${randomLeft}%; top: ${randomTop}%`,
       // });
       // parent.appendChild(post);
-      // let valueForm = {
-      //     text: this.text
-      //   };
-      // this.$store
-      //     .dispatch("fetchPost", {
-      //       endpoint: "post/",
-      //       valueForm: valueForm,
-      //       method: "POST",
-      //     })
-      //     .then((response) => response.json())
-      //     .then((data) => {
-      //       console.log("dataOK", data);
-      //     });
-      this.$emit("newPost");
+      let valueForm = {
+          text: ""
+        };
+      this.$store
+          .dispatch("fetchPost", {
+            endpoint: "post/",
+            valueForm: valueForm,
+            method: "POST",
+          })
+          .then((response) => response.json())
+          .then((data) => {
+            this.$emit("newPost", data);
+            console.log("dataOK", data);
+          });
+      
     },
   },
 };

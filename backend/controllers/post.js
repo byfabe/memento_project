@@ -6,6 +6,9 @@ exports.createPost = (req, res, next) => {
       text: req.body.text
     });
     post.save()
-      .then(() => res.status(201).json({ message: 'Post enregistré !'}))
+      .then(() => res.status(201).json({ 
+        messageId: post._id,
+        message: 'Post enregistré !'
+      }))
       .catch(error => res.status(400).json({ error }));
 }
