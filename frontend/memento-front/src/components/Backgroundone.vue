@@ -3,23 +3,24 @@
     <Navlink v-on:newPost="addPost" />
     <div @mousewheel="scrollColor" class="workspace w1">
       <transition-group v-on:enter="makeDraggable">
-      <div
-        class="box"
-        :class="postColor"
-        v-for="post in posts"
-        :key="post"
-      >
-        <textarea
-          class="input-box"
-          v-model="post.value"
-          :placeholder="post.messageId"
-          name="text-box"
-          id="text-box"
-          rows="10"
-          maxlength="65"
-          @keyup="keyup(post)"
-        ></textarea>
-      </div>
+        <div
+          class="box"
+          :class="postColor"
+          v-for="post in posts"
+          :key="post"
+          @dragend="positionPost(post, $event)"
+        >
+          <textarea
+            class="input-box"
+            v-model="post.value"
+            :placeholder="post.messageId"
+            name="text-box"
+            id="text-box"
+            rows="10"
+            maxlength="65"
+            @keyup="keyup(post)"
+          ></textarea>
+        </div>
       </transition-group>
     </div>
   </div>
@@ -45,17 +46,16 @@ export default {
   },
   methods: {
     keyup(post) {
-
-     console.log(post);
+      console.log(post);
     },
     //Nouveau post ajoute une value dans le tableau "posts"
     addPost(data) {
-      this.posts.push({ 
-        value: "", 
+      this.posts.push({
+        value: "",
         x: 0,
-        y: 0, 
-        messageId: data.messageId
-        });
+        y: 0,
+        messageId: data.messageId,
+      });
       console.log(this.posts);
     },
     //Nouveau post devient draggable
@@ -66,7 +66,7 @@ export default {
         bounds: ".container-main",
         inertia: true,
         dragClickables: false,
-        onDragEnd: () => this.movePost(element),//la fonction du kiff
+        onDragEnd: () => this.movePost(element), //la fonction du kiff
       });
       // Animation à la création du post
       const tl = gsap.timeline();
@@ -85,6 +85,20 @@ export default {
         document.location.href = "/#/divers";
       }
     },
+    positionPost(post, event) {
+      let box = event.target;
+      let x = box.getBoundingClientRect().x;
+      let y = box.getBoundingClientRect().y;
+      let containerMain = document.querySelector(".container-main");
+      let w = containerMain.getBoundingClientRect().width;
+      let h = containerMain.getBoundingClientRect().height;
+      let Xpercent = Math.round((x / w) * 100);
+      let Ypercent = Math.round((y / h) * 100);
+      console.log(post);
+      console.log("x", Xpercent + "%", "y", Ypercent + "%");
+      post.x = Xpercent;
+      post.y = Ypercent;
+    },
     // Animation des post en relachant le click de la souris avec "onDragEnd" (dans la fonction "makeDraggable")
     movePost(box) {
       const tl = gsap.timeline({ yoyo: true });
@@ -94,15 +108,14 @@ export default {
         duration: 0.6,
       });
       // Calcul de la position des post
-      let x = box.getBoundingClientRect().x;
-      let y = box.getBoundingClientRect().y;
-      let containerMain = document.querySelector(".container-main");
-      let w = containerMain.getBoundingClientRect().width;
-      let h = containerMain.getBoundingClientRect().height;
-      this.Xpercent = Math.round((x / w) * 100);
-      this.Ypercent = Math.round((y / h) * 100);
-      console.log(box);
-      console.log("x", this.Xpercent + "%", "y", this.Ypercent + "%");
+      // let x = box.getBoundingClientRect().x;
+      // let y = box.getBoundingClientRect().y;
+      // let containerMain = document.querySelector(".container-main");
+      // let w = containerMain.getBoundingClientRect().width;
+      // let h = containerMain.getBoundingClientRect().height;
+      // this.Xpercent = Math.round((x / w) * 100);
+      // this.Ypercent = Math.round((y / h) * 100);
+      // console.log("x", this.Xpercent + "%", "y", this.Ypercent + "%");
     },
   },
   computed: {
