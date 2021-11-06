@@ -29,8 +29,13 @@ exports.modifyPost = (req, res, next) => {
     .then(() => res.status(200).json({ message: "Post modifié !" }))
     .catch((error) => res.status(400).json({ error }));
 };
+exports.deletePost = (req, res, next) => {
+  Post.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: "Post supprimé !" }))
+    .catch((error) => res.status(400).json({ error }));
+};
 exports.allPosts = (req, res, next) => {
-  Post.find({userId: res.locals.userId})
-    .then(posts => res.status(200).json(posts))
-    .catch(error => res.status(400).json({ error }));
-}
+  Post.find({ userId: res.locals.userId })
+    .then((posts) => res.status(200).json(posts))
+    .catch((error) => res.status(400).json({ error }));
+};

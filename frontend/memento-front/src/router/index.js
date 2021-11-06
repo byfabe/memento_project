@@ -4,6 +4,7 @@ import Workspacetwo from "../views/Workspacetwo.vue";
 import Workspacethree from "../views/Workspacethree.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
+import store from '../store/index.js'
 
 const routes = [
   {
@@ -20,6 +21,13 @@ const routes = [
     path: "/loisir",
     name: "Workspaceone",
     component: Workspaceone,
+    beforeEnter (route, redirect, next) {
+      if (store.state.enter === true) {
+        next()
+      } else {
+        next({ name: "Signup"})
+      }
+    },
   },
   {
     path: "/travail",

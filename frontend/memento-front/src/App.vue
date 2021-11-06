@@ -30,4 +30,7 @@
 .display {
   display: none;
 }
+::-webkit-scrollbar {
+    display: none;
+}
 </style>

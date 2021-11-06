@@ -3,16 +3,22 @@ import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
+    enter: false,
     email: "",
     token: "",
     fetchUrl: "http://localhost:3000/api/",
   },
-  getters: {},
+  getters: {
+    getEnter: (state) => state.enter,
+  },
   mutations: {
     ADD_PROFILE(state, data) {
       state.token = data.token;
       state.email = data.email;
     },
+    ADD_ENTER(state, logic) {
+      state.enter = logic
+    }
   },
   actions: {
     fetchAuth(context, { endpoint, method, valueForm }) {

@@ -109,6 +109,10 @@ export default {
           .then((response) => response.json())
           .then((data) => {
             this.$store.commit("ADD_PROFILE", data);
+            if (data) {
+              let logic = true
+              this.$store.commit("ADD_ENTER", logic)
+            }
             console.log("dataOK", data);
           });
         document.location.href = "#/loisir";

@@ -2,15 +2,37 @@
   <div class="container-main">
     <Navlink v-on:newPost="addPost" />
     <div @mousewheel="scrollColor" class="workspace w1">
+      <div class="title">
+        <p>{{ this.title }}</p>
+        <i class="fas fa-pencil-alt pencil-icon"></i>
+        <input type="text" class="input-title">
+      </div>
       <transition-group v-on:enter="makeDraggable">
         <div
           class="box"
           :class="postColor"
           :style="{ left: post.x + '%', top: post.y + '%' }"
-          v-for="post in posts"
+          v-for="(post, index) in posts"
           :key="post"
-          @mouseup="positionPost(post, $event)"
+          :data-index="index"
         >
+        <i class="fas fa-sort-down flower-icon"></i>
+          <!-- <lord-icon
+            class="flower-icon"
+            src="https://cdn.lordicon.com/oohidvvw.json"
+            trigger="hover"
+            colors="primary:#ee6d66,secondary:#e86830"
+          >
+          </lord-icon> -->
+          <lord-icon
+            @click="deletePost(post)"
+            src="https://cdn.lordicon.com/gsqxdxog.json"
+            trigger="hover"
+            colors="primary:#242424,secondary:#242424"
+            stroke="61"
+            class="trash-icon"
+          >
+          </lord-icon>
           <textarea
             class="input-box"
             v-model="post.text"
@@ -39,6 +61,7 @@ export default {
   setup() {},
   data() {
     return {
+      title: "memento",
       classColor: ["red", "blue", "yellow", "green"],
       posts: [],
     };
@@ -59,14 +82,13 @@ export default {
         .then((data) => {
           console.log("dataOK", data);
         });
-      console.log(post);
     },
     //Nouveau post, ajoute clée et value dans le tableau "posts"
     addPost(data) {
       this.posts.push({
         text: "",
-        x: 50,
-        y: 50,
+        x: 20,
+        y: 20,
         _id: data._id,
       });
       console.log(this.posts);
@@ -74,14 +96,17 @@ export default {
     //Nouveau post devient draggable
     makeDraggable(element) {
       Draggable.create(element, {
-        type: "x,y",
+        type: "top,left",
         edgeResistance: 0.65,
         bounds: ".container-main",
         inertia: true,
         dragClickables: false,
-        allowEventDefault: true,
+        //allowEventDefault: false,
         allowContextMenu: true,
-        onDragEnd: () => this.movePost(element), //la fonction du kiff
+        onDragEnd: () => {
+          this.movePost(element);
+          this.positionPost(element.dataset.index, element);
+        },
       });
       // Animation à la création du post
       const tl = gsap.timeline();
@@ -101,16 +126,17 @@ export default {
       }
     },
     //Calcul de la position du post + fetch position du post
-    positionPost(post, event) {
-      let box = event.target;
+    positionPost(index, event) {
+      let post = this.posts[index];
+      let box = event;
       let x = box.getBoundingClientRect().x;
       let y = box.getBoundingClientRect().y;
       let containerMain = document.querySelector(".container-main");
       let w = containerMain.getBoundingClientRect().width;
       let h = containerMain.getBoundingClientRect().height;
-      let Xpercent = Math.round((x / w) * 100);
-      let Ypercent = Math.round((y / h) * 100);
-      console.log(post);
+      let Xpercent = ((x / w) * 100).toFixed(2);
+      let Ypercent = ((y / h) * 100).toFixed(2);
+      console.log("index", post);
       console.log("x", Xpercent + "%", "y", Ypercent + "%");
       post.x = Xpercent;
       post.y = Ypercent;
@@ -132,12 +158,32 @@ export default {
     },
     // Animation des post en relachant le click de la souris avec "onDragEnd" (dans la fonction "makeDraggable")
     movePost(box) {
-      const tl = gsap.timeline({ yoyo: true });
-      tl.from(box, {
-        scale: 0.9,
-        ease: "bounce",
-        duration: 0.6,
-      });
+      const tl = gsap.timeline();
+      tl.fromTo(
+        box,
+        {
+          transformOrigin: "top left",
+          scale: 0.9,
+        },
+        {
+          scale: 1,
+          ease: "bounce",
+          duration: 0.7,
+        }
+      );
+    },
+    deletePost(post) {
+      this.$store
+        .dispatch("fetchPost", {
+          endpoint: "post/" + post._id,
+          //valueForm: valueForm,
+          method: "DELETE",
+        })
+        .then((response) => response.json())
+        .then(() => {
+          this.posts = this.posts.filter((item) => item != post);
+        });
+      console.log("ok");
     },
   },
   computed: {
@@ -168,7 +214,6 @@ export default {
         this.posts = data;
         console.log("dataOKGET", data);
       });
-      
   },
 };
 </script>
@@ -206,6 +251,19 @@ export default {
     );
   }
 }
+.title {
+  
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & p {
+    font-size: 15vw;
+    color: #f8ae6d80;
+    font-family: "Gloria Hallelujah", cursive;
+    filter: blur(4px);
+  }
+}
 /deep/ .box {
   position: absolute;
   display: flex;
@@ -215,13 +273,10 @@ export default {
   height: 250px;
   background-color: orchid;
   border-radius: 98% 2% 95% 5% / 3% 97% 3% 97%;
-  //transform: translateX(-50%) translateY(-50%);
-  top: 50%;
-  right: 50%;
   box-shadow: 5px 5px 15px -7px rgba(0, 0, 0, 0.23);
 }
 /deep/ .red {
-  background: #f27589;
+  background: #f2758ab2;
 }
 /deep/ .blue {
   background: #83d0cb;
@@ -230,7 +285,7 @@ export default {
   background: #f7c759;
 }
 /deep/ .green {
-  background: #82c26e;
+  background: #82c26eb0;
 }
 /deep/ .input-box {
   width: 100%;
@@ -246,7 +301,39 @@ export default {
   font-weight: 500;
   font-family: "Raleway", sans-serif;
 }
+.trash-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px 10px 10px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  opacity: 0.2;
+  transition: 0.2s ease-out;
+  &:hover {
+    opacity: 1;
+    transition: 0.2s ease-out;
+  }
+}
+.flower-icon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 20px 10px 10px 20px;
+  font-size: 1.7vw;
+  // width: 50px;
+  // height: 50px;
+  cursor: pointer;
+  opacity: 0.2;
+  transition: 0.2s ease-out;
+  &:hover {
+    opacity: 0.8;
+    transition: 0.2s ease-out;
+  }
+}
 </style>
 
 
 //:style="{ transform: translate(post.x + '%', post.y + '%') }"
+//@mouseup.self="positionPost(post, $event)"

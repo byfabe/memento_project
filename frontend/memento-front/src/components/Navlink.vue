@@ -78,8 +78,9 @@ export default {
   width: clamp(150px, 15vw, 200px);
   height: clamp(200px, 40%, 500px);
   box-shadow: 13px 11px 15px -8px rgba(0, 0, 0, 0.100);
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  // border-top-right-radius: 20px;
+  // border-bottom-right-radius: 20px;
+  border-radius: 98% 2% 95% 5% / 3% 97% 3% 97%;
   & .plus {
     cursor: pointer;
   }
