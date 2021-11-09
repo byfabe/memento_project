@@ -3,9 +3,16 @@
     <Navlink v-on:newPost="addPost" />
     <div @mousewheel="scrollColor" class="workspace w1">
       <div class="title">
-        <p>{{ this.title }}</p>
-        <i class="fas fa-pencil-alt pencil-icon"></i>
-        <input type="text" class="input-title">
+        <p class="title-color title-color-1">{{ this.title }}</p>
+        <div class="container-input-title">
+          <i class="fas fa-pencil-alt pencil-icon" @click="removeHidden"></i>
+          <input
+            type="text"
+            class="input-title hidden"
+            v-model="title"
+            maxlength="7"
+          />
+        </div>
       </div>
       <transition-group v-on:enter="makeDraggable">
         <div
@@ -16,14 +23,7 @@
           :key="post"
           :data-index="index"
         >
-        <i class="fas fa-sort-down flower-icon"></i>
-          <!-- <lord-icon
-            class="flower-icon"
-            src="https://cdn.lordicon.com/oohidvvw.json"
-            trigger="hover"
-            colors="primary:#ee6d66,secondary:#e86830"
-          >
-          </lord-icon> -->
+          <i class="fas fa-sort-down down-icon"></i>
           <lord-icon
             @click="deletePost(post)"
             src="https://cdn.lordicon.com/gsqxdxog.json"
@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       title: "memento",
-      classColor: ["red", "blue", "yellow", "green"],
+      classColor: ["red", "blue", "green"],
       posts: [],
     };
   },
@@ -119,10 +119,42 @@ export default {
     },
     // Changement de page au scroll
     scrollColor(e) {
-      if (e.deltaY > 0) {
-        document.location.href = "/#/travail";
-      } else if (e.deltaY < 0) {
-        document.location.href = "/#/divers";
+      let workspace = document.querySelector(".workspace");
+      let titleColor = document.querySelector(".title-color");
+      if (e.deltaY > 0 && workspace.classList.contains("w1")) {
+        workspace.classList.remove("w1");
+        workspace.classList.add("w2");
+        titleColor.classList.remove("title-color-1");
+        titleColor.classList.add("title-color-2");
+        //document.location.href = "/#/travail";
+      } else if (e.deltaY > 0 && workspace.classList.contains("w2")) {
+        workspace.classList.remove("w2");
+        workspace.classList.add("w3");
+        titleColor.classList.remove("title-color-2");
+        titleColor.classList.add("title-color-3");
+        //document.location.href = "/#/divers";
+      } else if (e.deltaY > 0 && workspace.classList.contains("w3")) {
+        workspace.classList.remove("w3");
+        workspace.classList.add("w1");
+        titleColor.classList.remove("title-color-3");
+        titleColor.classList.add("title-color-1");
+      } else if (e.deltaY < 0 && workspace.classList.contains("w1")) {
+        workspace.classList.remove("w1");
+        workspace.classList.add("w3");
+        titleColor.classList.remove("title-color-1");
+        titleColor.classList.add("title-color-3");
+        //document.location.href = "/#/travail";
+      } else if (e.deltaY < 0 && workspace.classList.contains("w2")) {
+        workspace.classList.remove("w2");
+        workspace.classList.add("w1");
+        titleColor.classList.remove("title-color-2");
+        titleColor.classList.add("title-color-1");
+        //document.location.href = "/#/divers";
+      } else if (e.deltaY < 0 && workspace.classList.contains("w3")) {
+        workspace.classList.remove("w3");
+        workspace.classList.add("w2");
+        titleColor.classList.remove("title-color-3");
+        titleColor.classList.add("title-color-2");
       }
     },
     //Calcul de la position du post + fetch position du post
@@ -185,6 +217,14 @@ export default {
         });
       console.log("ok");
     },
+    removeHidden() {
+      let input = document.querySelector(".input-title");
+      if (input.classList.contains("hidden")) {
+        input.classList.remove("hidden");
+      } else {
+        input.classList.add("hidden");
+      }
+    },
   },
   computed: {
     //Random color post-it
@@ -224,6 +264,7 @@ export default {
   width: 100vw;
   height: 100vh;
   & .w1 {
+    transition: 0.5s ease-in;
     width: 100%;
     height: 100%;
     background: linear-gradient(
@@ -252,16 +293,64 @@ export default {
   }
 }
 .title {
-  
+  margin-left: 15%;
   height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+  //-moz-user-select: none;
   & p {
+    position: relative;
     font-size: 15vw;
-    color: #f8ae6d80;
     font-family: "Gloria Hallelujah", cursive;
-    filter: blur(4px);
+    //filter: blur(2px);
+  }
+}
+.title-color-1 {
+  color: #f8ae6dea;
+}
+.title-color-2 {
+  color: #6d7bf859;
+}
+.title-color-3 {
+  color: #6df86d75;
+}
+.container-input-title {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  right: 0;
+  width: 10%;
+  margin-top: 30px;
+  & .input-title {
+    top: 0;
+    right: 0;
+    width: 70%;
+    padding: 15px 0 10px 0;
+    border: none;
+    outline: none;
+    background: none;
+    border-bottom: 2px solid #fbcfc9;
+    color: #f1f1f1;
+    font-size: clamp(12px, 1.2vw, 30px);
+    font-family: "Raleway", sans-serif;
+    text-align: center;
+  }
+  & .pencil-icon {
+    font-size: clamp(12px, 1.5vw, 30px);
+    color: #f1f1f1bb;
+    border: 2px solid #f1f1f1bb;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    &:hover {
+      color: #f1f1f1;
+      border: 2px solid #f1f1f1;
+    }
   }
 }
 /deep/ .box {
@@ -279,10 +368,7 @@ export default {
   background: #f2758ab2;
 }
 /deep/ .blue {
-  background: #83d0cb;
-}
-/deep/ .yellow {
-  background: #f7c759;
+  background: #83d0cbb7;
 }
 /deep/ .green {
   background: #82c26eb0;
@@ -316,7 +402,7 @@ export default {
     transition: 0.2s ease-out;
   }
 }
-.flower-icon {
+.down-icon {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -331,6 +417,9 @@ export default {
     opacity: 0.8;
     transition: 0.2s ease-out;
   }
+}
+.hidden {
+  visibility: hidden;
 }
 </style>
 
