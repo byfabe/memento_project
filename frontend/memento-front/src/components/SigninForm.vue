@@ -7,44 +7,42 @@
         <span class="bold">compte</span> !
       </p>
       <div class="container-form">
-        <form action="">
+        <Form method="" action="">
           <div class="content-form">
             <label for="mail">E-mail</label>
-            <input
+            <Field
               @input="input"
-              name="mail"
-              type="text"
+              name="email"
               id="mail"
-              required
+              :rules="emailRules"
               v-model="email"
               :placeholder="[[placeholderMail]]"
             />
+            <ErrorMessage name="email" />
           </div>
           <div class="content-form">
             <label for="password">Mot de passe</label>
-            <input
+            <Field
               @input="input"
               name="password"
               type="password"
               id="password"
-              required
+              :rules="passwordRules"
               v-model="password"
               :placeholder="[[placeholderPass]]"
             />
+            <ErrorMessage name="password" />
           </div>
           <div class="content-form">
             <button
-              @click="
-                
-                validation();
-              "
+              @click="validation()"
               :disabled="!isComplete"
               class="btn-form"
             >
               Valider
             </button>
           </div>
-        </form>
+        </Form>
       </div>
       <div class="forgotpassword">
         <a href="">Mot de passe oublié ?</a>
@@ -56,10 +54,27 @@
 </template>
 
 <script>
+import { Field, Form, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
 import { mapGetters } from "vuex";
+import { configure } from "vee-validate";
+import { localize } from "@vee-validate/i18n";
+import fr from "@vee-validate/i18n/dist/locale/fr.json";
+configure({
+  generateMessage: localize({
+    fr,
+  }),
+});
 export default {
+  components: {
+    Field,
+    Form,
+    ErrorMessage,
+  },
   data() {
     return {
+      emailRules: yup.string().required().email(),
+      passwordRules: yup.string().required().min(8),
       email: "",
       password: "",
       placeholderMail: "",
@@ -74,49 +89,47 @@ export default {
         e.target.parentNode.classList.remove("animation");
       }
     },
-    emailValidation() {
-      if (/.+@.+/.test(this.email)) {
-        this.placeholderMail = "";
-        return true;
-      } else {
-        this.email = "";
-        this.placeholderMail = "Email incorrect";
-        return false;
-      }
-    },
-    passValidation() {
-      if (this.password >= 8) {
-        this.placeholderPass = "";
-        return true;
-      } else {
-        this.password = "";
-        this.placeholderPass = "Min. 8 caractères";
-        return false;
-      }
-    },
+    // emailValidation() {
+    //   if (/.+@.+/.test(this.email)) {
+    //     this.placeholderMail = "";
+    //     return true;
+    //   } else {
+    //     this.email = "";
+    //     this.placeholderMail = "Email incorrect";
+    //     return false;
+    //   }
+    // },
+    // passValidation() {
+    //   if (this.password >= 8) {
+    //     this.placeholderPass = "";
+    //     return true;
+    //   } else {
+    //     this.password = "";
+    //     this.placeholderPass = "Min. 8 caractères";
+    //     return false;
+    //   }
+    // },
     validation() {
-      if (this.emailValidation() && this.passValidation() === true) {
-        let valueForm = {
-          email: this.email,
-          password: this.password,
-        };
-        this.$store
-          .dispatch("fetchAuth", {
-            endpoint: "auth/login",
-            valueForm: valueForm,
-            method: "POST",
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            this.$store.commit("ADD_PROFILE", data);
-            if (data) {
-              let logic = true
-              this.$store.commit("ADD_ENTER", logic)
-            }
-            console.log("dataOK", data);
-          });
-        //document.location.href = "#/loisir";
-      }
+      let valueForm = {
+        email: this.email,
+        password: this.password,
+      };
+      this.$store
+        .dispatch("fetchAuth", {
+          endpoint: "auth/login",
+          valueForm: valueForm,
+          method: "POST",
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          this.$store.commit("ADD_PROFILE", data);
+          let logic = true;
+          this.$store.commit("ADD_ENTER", logic);
+          if (data) {
+            document.location.href = "#/loisir";
+          }
+          console.log("dataOK", data);
+        });
     },
   },
   computed: {

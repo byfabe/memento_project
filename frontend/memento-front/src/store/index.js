@@ -40,9 +40,10 @@ export default createStore({
     },
   },
   modules: {},
-  plugins: [
-    createPersistedState({
+  plugins: [createPersistedState({
       storage: window.sessionStorage,
     }),
   ],
 });
+
+//sessionStorage.clear() déconnexion 

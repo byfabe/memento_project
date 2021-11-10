@@ -4,6 +4,9 @@
     <div @mousewheel="scrollColor" class="workspace w1">
       <div class="title">
         <p class="title-color title-color-1">{{ this.title }}</p>
+        <div class="container-fullscreen">
+          <i class="fas fa-expand fullscreen-icon" @click="fullScreen"></i>
+        </div>
         <div class="container-input-title">
           <i class="fas fa-pencil-alt pencil-icon" @click="removeHidden"></i>
           <input
@@ -12,6 +15,18 @@
             v-model="title"
             maxlength="7"
           />
+          <div
+            class="background-color bg1 hidden"
+            @click="backgroundColorSalmon"
+          ></div>
+          <div
+            class="background-color bg2 hidden"
+            @click="backgroundColorBlue"
+          ></div>
+          <div
+            class="background-color bg3 hidden"
+            @click="backgroundColorGreen"
+          ></div>
         </div>
       </div>
       <transition-group v-on:enter="makeDraggable">
@@ -157,6 +172,7 @@ export default {
     //     titleColor.classList.add("title-color-2");
     //   }
     // },
+
     //Calcul de la position du post + fetch position du post
     positionPost(index, event) {
       let post = this.posts[index];
@@ -218,13 +234,98 @@ export default {
         });
       console.log("post supprimé");
     },
-    //Affiche l'input sous le bouton "crayon"
+    //Affiche l'input et le choix des background-color sous le bouton "crayon"
     removeHidden() {
       let input = document.querySelector(".input-title");
+      let backgroundColor = document.querySelectorAll(".background-color");
+      for (let i = 0; i < backgroundColor.length; i++) {
+        if (input.classList.contains("hidden")) {
+          backgroundColor[i].classList.remove("hidden");
+        } else {
+          backgroundColor[i].classList.add("hidden");
+        }
+      }
       if (input.classList.contains("hidden")) {
         input.classList.remove("hidden");
       } else {
         input.classList.add("hidden");
+      }
+    },
+    //Applique ou supprime le plein écran avec le bouton "fullscreen"
+    fullScreen() {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        document.documentElement.requestFullscreen();
+      }
+    },
+    //Changement couleur pour le bouton "saumon"
+    backgroundColorSalmon() {
+      let workspace = document.querySelector(".workspace");
+      let iconMenu = document.querySelectorAll(".icon-menu");
+      let menu = document.querySelector(".menu");
+      //let titleColor = document.querySelector(".title-menu");
+      if (
+        workspace.classList.contains("w2") ||
+        workspace.classList.contains("w3")
+      ) {
+        workspace.classList.remove("w2");
+        workspace.classList.remove("w3");
+        workspace.classList.add("w1");
+        for (let i = 0; i < iconMenu.length; i++) {
+          iconMenu[i].classList.remove("i2");
+          iconMenu[i].classList.remove("i3");
+          iconMenu[i].classList.add("i1");
+        }
+        menu.classList.remove("m2");
+        menu.classList.remove("m3");
+        menu.classList.add("m1");
+      }
+    },
+    //Changement couleur pour le bouton "bleu"
+    backgroundColorBlue() {
+      let workspace = document.querySelector(".workspace");
+      let iconMenu = document.querySelectorAll(".icon-menu");
+      let menu = document.querySelector(".menu");
+      //let titleColor = document.querySelector(".title-menu");
+      if (
+        workspace.classList.contains("w1") ||
+        workspace.classList.contains("w3")
+      ) {
+        workspace.classList.remove("w1");
+        workspace.classList.remove("w3");
+        workspace.classList.add("w2");
+        for (let i = 0; i < iconMenu.length; i++) {
+          iconMenu[i].classList.remove("i1");
+          iconMenu[i].classList.remove("i3");
+          iconMenu[i].classList.add("i2");
+        }
+        menu.classList.remove("m1");
+        menu.classList.remove("m3");
+        menu.classList.add("m2");
+      }
+    },
+    //Changement couleur pour le bouton "vert"
+    backgroundColorGreen() {
+      let workspace = document.querySelector(".workspace");
+      let iconMenu = document.querySelectorAll(".icon-menu");
+      let menu = document.querySelector(".menu");
+      //let titleColor = document.querySelector(".title-menu");
+      if (
+        workspace.classList.contains("w1") ||
+        workspace.classList.contains("w2")
+      ) {
+        workspace.classList.remove("w1");
+        workspace.classList.remove("w2");
+        workspace.classList.add("w3");
+        for (let i = 0; i < iconMenu.length; i++) {
+          iconMenu[i].classList.remove("i1");
+          iconMenu[i].classList.remove("i2");
+          iconMenu[i].classList.add("i3");
+        }
+        menu.classList.remove("m1");
+        menu.classList.remove("m2");
+        menu.classList.add("m3");
       }
     },
   },
@@ -236,13 +337,8 @@ export default {
       ];
     },
   },
+  //Fetch les posts au chargement de la page
   mounted: function () {
-    // Changement de la couleur du menu en fonction de la page
-    let iconMenu = document.querySelectorAll(".icon-menu-all");
-    for (let i = 0; i < iconMenu.length; i++) {
-      iconMenu[i].classList.remove("icon-menu2", "icon-menu3");
-      iconMenu[i].classList.add("icon-menu");
-    }
     // Suppression de la classe "display" pour faire apparaitre le menu
     document.querySelector(".container-main-nav").classList.remove("display");
     //Fetch tous les posts au chargement de la page
@@ -348,7 +444,63 @@ export default {
     color: #f1f1f1bb;
     border: 3px solid #f1f1f1bb;
     padding: 15px;
-    border-radius: 50%;
+    border-radius: 10px;
+    cursor: pointer;
+    &:hover {
+      color: #f1f1f1;
+      border: 3px solid #f1f1f1;
+    }
+  }
+  & .background-color {
+    width: 50px;
+    height: 50px;
+    margin-top: 30px;
+    border: 3px solid #f1f1f1;
+    border-radius: 10px;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  & .bg1 {
+    background: linear-gradient(
+      90deg,
+      hsla(29, 92%, 70%, 1) 0%,
+      hsla(0, 87%, 73%, 1) 100%
+    );
+  }
+  & .bg2 {
+    background: linear-gradient(
+      90deg,
+      hsla(171, 87%, 67%, 1) 0%,
+      hsla(236, 100%, 72%, 1) 100%
+    );
+  }
+  & .bg3 {
+    background: linear-gradient(
+      90deg,
+      hsla(145, 84%, 73%, 1) 0%,
+      hsla(150, 61%, 48%, 1) 100%
+    );
+  }
+}
+.container-fullscreen {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  right: 0;
+  margin-top: 30px;
+  margin-right: 8%;
+  & .fullscreen-icon {
+    font-size: clamp(12px, 1.5vw, 30px);
+    color: #f1f1f1bb;
+    border: 3px solid #f1f1f1bb;
+    padding: 15px;
+    border-radius: 10px;
     cursor: pointer;
     &:hover {
       color: #f1f1f1;
@@ -388,7 +540,7 @@ export default {
   font-size: clamp(12px, 1.1vw, 150px);
   color: #181818e3;
   font-weight: 600;
-  font-family: 'Indie Flower', cursive;
+  font-family: "Indie Flower", cursive;
 }
 .trash-icon {
   position: absolute;

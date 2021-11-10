@@ -13,7 +13,6 @@
             <label for="mail">E-mail</label>
             <input
               @input="input"
-              name="mail"
               type="text"
               id="mail"
               required
@@ -25,7 +24,6 @@
             <label for="password">Mot de passe</label>
             <input
               @input="input"
-              name="password"
               type="password"
               id="password"
               required
@@ -37,7 +35,6 @@
             <label for="confirm-password">Confirmer mot de passe</label>
             <input
               @input="input"
-              name="password"
               type="password"
               id="confirm-password"
               required
@@ -154,7 +151,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .container-main-signup {
   display: flex;
   flex-direction: column;
