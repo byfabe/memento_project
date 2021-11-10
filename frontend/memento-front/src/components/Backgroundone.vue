@@ -29,18 +29,18 @@
             src="https://cdn.lordicon.com/gsqxdxog.json"
             trigger="hover"
             colors="primary:#242424,secondary:#242424"
-            stroke="61"
+            stroke="120"
             class="trash-icon"
           >
           </lord-icon>
           <textarea
             class="input-box"
             v-model="post.text"
-            :placeholder="post._id"
+            placeholder="Ceci est une note."
             name="text-box"
             id="text-box"
-            rows="10"
-            maxlength="65"
+            rows="4"
+            maxlength="60"
             @keyup="fetchValue(post)"
           ></textarea>
         </div>
@@ -118,45 +118,45 @@ export default {
       });
     },
     // Changement de page au scroll
-    scrollColor(e) {
-      let workspace = document.querySelector(".workspace");
-      let titleColor = document.querySelector(".title-color");
-      if (e.deltaY > 0 && workspace.classList.contains("w1")) {
-        workspace.classList.remove("w1");
-        workspace.classList.add("w2");
-        titleColor.classList.remove("title-color-1");
-        titleColor.classList.add("title-color-2");
-        //document.location.href = "/#/travail";
-      } else if (e.deltaY > 0 && workspace.classList.contains("w2")) {
-        workspace.classList.remove("w2");
-        workspace.classList.add("w3");
-        titleColor.classList.remove("title-color-2");
-        titleColor.classList.add("title-color-3");
-        //document.location.href = "/#/divers";
-      } else if (e.deltaY > 0 && workspace.classList.contains("w3")) {
-        workspace.classList.remove("w3");
-        workspace.classList.add("w1");
-        titleColor.classList.remove("title-color-3");
-        titleColor.classList.add("title-color-1");
-      } else if (e.deltaY < 0 && workspace.classList.contains("w1")) {
-        workspace.classList.remove("w1");
-        workspace.classList.add("w3");
-        titleColor.classList.remove("title-color-1");
-        titleColor.classList.add("title-color-3");
-        //document.location.href = "/#/travail";
-      } else if (e.deltaY < 0 && workspace.classList.contains("w2")) {
-        workspace.classList.remove("w2");
-        workspace.classList.add("w1");
-        titleColor.classList.remove("title-color-2");
-        titleColor.classList.add("title-color-1");
-        //document.location.href = "/#/divers";
-      } else if (e.deltaY < 0 && workspace.classList.contains("w3")) {
-        workspace.classList.remove("w3");
-        workspace.classList.add("w2");
-        titleColor.classList.remove("title-color-3");
-        titleColor.classList.add("title-color-2");
-      }
-    },
+    // scrollColor(e) {
+    //   let workspace = document.querySelector(".workspace");
+    //   let titleColor = document.querySelector(".title-color");
+    //   if (e.deltaY > 0 && workspace.classList.contains("w1")) {
+    //     workspace.classList.remove("w1");
+    //     workspace.classList.add("w2");
+    //     titleColor.classList.remove("title-color-1");
+    //     titleColor.classList.add("title-color-2");
+    //     //document.location.href = "/#/travail";
+    //   } else if (e.deltaY > 0 && workspace.classList.contains("w2")) {
+    //     workspace.classList.remove("w2");
+    //     workspace.classList.add("w3");
+    //     titleColor.classList.remove("title-color-2");
+    //     titleColor.classList.add("title-color-3");
+    //     //document.location.href = "/#/divers";
+    //   } else if (e.deltaY > 0 && workspace.classList.contains("w3")) {
+    //     workspace.classList.remove("w3");
+    //     workspace.classList.add("w1");
+    //     titleColor.classList.remove("title-color-3");
+    //     titleColor.classList.add("title-color-1");
+    //   } else if (e.deltaY < 0 && workspace.classList.contains("w1")) {
+    //     workspace.classList.remove("w1");
+    //     workspace.classList.add("w3");
+    //     titleColor.classList.remove("title-color-1");
+    //     titleColor.classList.add("title-color-3");
+    //     //document.location.href = "/#/travail";
+    //   } else if (e.deltaY < 0 && workspace.classList.contains("w2")) {
+    //     workspace.classList.remove("w2");
+    //     workspace.classList.add("w1");
+    //     titleColor.classList.remove("title-color-2");
+    //     titleColor.classList.add("title-color-1");
+    //     //document.location.href = "/#/divers";
+    //   } else if (e.deltaY < 0 && workspace.classList.contains("w3")) {
+    //     workspace.classList.remove("w3");
+    //     workspace.classList.add("w2");
+    //     titleColor.classList.remove("title-color-3");
+    //     titleColor.classList.add("title-color-2");
+    //   }
+    // },
     //Calcul de la position du post + fetch position du post
     positionPost(index, event) {
       let post = this.posts[index];
@@ -204,6 +204,7 @@ export default {
         }
       );
     },
+    //Fetch pour supprimer un post-it
     deletePost(post) {
       this.$store
         .dispatch("fetchPost", {
@@ -215,8 +216,9 @@ export default {
         .then(() => {
           this.posts = this.posts.filter((item) => item != post);
         });
-      console.log("ok");
+      console.log("post supprimé");
     },
+    //Affiche l'input sous le bouton "crayon"
     removeHidden() {
       let input = document.querySelector(".input-title");
       if (input.classList.contains("hidden")) {
@@ -294,10 +296,10 @@ export default {
 }
 .title {
   margin-left: 15%;
-  height: 90%;
+  height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   user-select: none;
   //-moz-user-select: none;
   & p {
@@ -305,6 +307,7 @@ export default {
     font-size: 15vw;
     font-family: "Gloria Hallelujah", cursive;
     //filter: blur(2px);
+    opacity: 0.5;
   }
 }
 .title-color-1 {
@@ -343,13 +346,13 @@ export default {
   & .pencil-icon {
     font-size: clamp(12px, 1.5vw, 30px);
     color: #f1f1f1bb;
-    border: 2px solid #f1f1f1bb;
+    border: 3px solid #f1f1f1bb;
     padding: 15px;
     border-radius: 50%;
     cursor: pointer;
     &:hover {
       color: #f1f1f1;
-      border: 2px solid #f1f1f1;
+      border: 3px solid #f1f1f1;
     }
   }
 }
@@ -360,7 +363,7 @@ export default {
   align-items: flex-end;
   width: 250px;
   height: 250px;
-  background-color: orchid;
+  border: 2px solid rgba(0, 0, 0, 0.23);
   border-radius: 98% 2% 95% 5% / 3% 97% 3% 97%;
   box-shadow: 5px 5px 15px -7px rgba(0, 0, 0, 0.23);
 }
@@ -381,11 +384,11 @@ export default {
   outline: none;
   resize: none;
   border: none;
-  border-top: rgba(0, 0, 0, 0.219) 4px solid;
-  font-size: clamp(12px, 1vw, 150px);
-  color: #181818;
-  font-weight: 500;
-  font-family: "Raleway", sans-serif;
+  border-top: rgba(0, 0, 0, 0.349) 4px solid;
+  font-size: clamp(12px, 1.1vw, 150px);
+  color: #181818e3;
+  font-weight: 600;
+  font-family: 'Indie Flower', cursive;
 }
 .trash-icon {
   position: absolute;
@@ -398,14 +401,14 @@ export default {
   opacity: 0.2;
   transition: 0.2s ease-out;
   &:hover {
-    opacity: 1;
+    opacity: 0.7;
     transition: 0.2s ease-out;
   }
 }
 .down-icon {
   position: absolute;
   bottom: 0;
-  left: 0;
+  right: 0;
   padding: 20px 10px 10px 20px;
   font-size: 1.7vw;
   // width: 50px;
@@ -426,3 +429,4 @@ export default {
 
 //:style="{ transform: translate(post.x + '%', post.y + '%') }"
 //@mouseup.self="positionPost(post, $event)"
+// setTimeout(() => {},5000);

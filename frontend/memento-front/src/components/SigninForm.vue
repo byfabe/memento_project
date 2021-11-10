@@ -35,8 +35,7 @@
           <div class="content-form">
             <button
               @click="
-                emailValidation();
-                passValidation();
+                
                 validation();
               "
               :disabled="!isComplete"
@@ -57,6 +56,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -115,11 +115,12 @@ export default {
             }
             console.log("dataOK", data);
           });
-        document.location.href = "#/loisir";
+        //document.location.href = "#/loisir";
       }
     },
   },
   computed: {
+    ...mapGetters(["getEnter"]),
     isComplete() {
       return this.email != "" && this.password != "";
     },
