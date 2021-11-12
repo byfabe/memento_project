@@ -1,10 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Workspaceone from "../views/Workspaceone.vue";
-import Workspacetwo from "../views/Workspacetwo.vue";
-import Workspacethree from "../views/Workspacethree.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
-import store from '../store/index.js'
+import store from "../store/index.js";
 
 const routes = [
   {
@@ -21,23 +19,13 @@ const routes = [
     path: "/loisir",
     name: "Workspaceone",
     component: Workspaceone,
-    beforeEnter (route, redirect, next) {
+    beforeEnter(route, redirect, next) {
       if (store.state.enter === true) {
-        next()
+        next();
       } else {
-        next({ name: "Signup"})
+        next({ name: "Signup" });
       }
     },
-  },
-  {
-    path: "/travail",
-    name: "Workspacetwo",
-    component: Workspacetwo,
-  },
-  {
-    path: "/divers",
-    name: "Workspacethree",
-    component: Workspacethree,
   },
 ];
 

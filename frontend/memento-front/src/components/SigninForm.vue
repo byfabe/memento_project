@@ -7,47 +7,28 @@
         <span class="bold">compte</span> !
       </p>
       <div class="container-form">
-        <Form method="" action="">
-          <div class="content-form">
-            <label for="mail">E-mail</label>
-            <Field
-              @input="input"
-              name="email"
-              id="mail"
-              :rules="emailRules"
-              v-model="email"
-              :placeholder="[[placeholderMail]]"
-            />
-          </div>
-          <div class="content-form">
-            <label for="password">Mot de passe</label>
-            <Field
-              @input="input"
-              name="password"
-              type="password"
-              id="password"
-              :rules="passwordRules"
-              v-model="password"
-              :placeholder="[[placeholderPass]]"
-            />
-          </div>
-          <div class="content-form form-btn">
-            <div class="container-error">
-              <div class="error-mail">
-                <ErrorMessage name="email" class="error" />
-              </div>
-              <div class="error-password">
-                <ErrorMessage name="password" class="error" />
-              </div>
-            </div>
-            <button
-              @click="validation()"
-              :disabled="!isComplete"
-              class="btn-form"
-            >
-              Valider
-            </button>
-          </div>
+        <Form
+          class="form"
+          @submit="onSubmit"
+          :validation-schema="schema"
+          @invalid-submit="onInvalidSubmit"
+        >
+          <TextInput
+            name="email"
+            type="email"
+            label="E-mail"
+            placeholder="Votre adresse email"
+            success-message="Got it, we won't spam you!"
+          />
+          <TextInput
+            name="password"
+            type="password"
+            label="Mot de passe"
+            placeholder="Votre mot de passe"
+            success-message="Nice and secure!"
+          />
+
+          <button class="submit-btn" type="submit">C'est parti !</button>
         </Form>
       </div>
       <div class="forgotpassword">
@@ -60,9 +41,10 @@
 </template>
 
 <script>
-import { Field, Form, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
-import { mapGetters } from "vuex";
+import { useStore } from "vuex";
+import { Form } from "vee-validate";
+import * as Yup from "yup";
+import TextInput from "../components/TextInput.vue";
 import { setLocale } from "yup";
 setLocale({
   string: {
@@ -70,80 +52,61 @@ setLocale({
     min: "Mot de passe min. 8 caractères",
   },
   mixed: {
-    required: ""
-  }
+    required: "",
+  },
 });
 export default {
   components: {
-    Field,
+    TextInput,
     Form,
-    ErrorMessage,
   },
-  data() {
-    return {
-      emailRules: yup.string().required().email(),
-      passwordRules: yup.string().required().min(8),
-      email: "",
-      password: "",
-    };
-  },
-  methods: {
-    input(e) {
-      if (this.email || this.placeholderMail != "") {
-        e.target.parentNode.classList.add("animation");
-      } else if (this.email || this.placeholderMail == "") {
-        e.target.parentNode.classList.remove("animation");
-      }
-    },
-    // emailValidation() {
-    //   if (/.+@.+/.test(this.email)) {
-    //     this.placeholderMail = "";
-    //     return true;
-    //   } else {
-    //     this.email = "";
-    //     this.placeholderMail = "Email incorrect";
-    //     return false;
-    //   }
-    // },
-    // passValidation() {
-    //   if (this.password >= 8) {
-    //     this.placeholderPass = "";
-    //     return true;
-    //   } else {
-    //     this.password = "";
-    //     this.placeholderPass = "Min. 8 caractères";
-    //     return false;
-    //   }
-    // },
-    validation() {
-      let valueForm = {
-        email: this.email,
-        password: this.password,
-      };
-      this.$store
+  setup() {
+    const store = useStore();
+    function onSubmit(values) {
+      store
         .dispatch("fetchAuth", {
           endpoint: "auth/login",
-          valueForm: valueForm,
+          valueForm: values,
           method: "POST",
         })
         .then((response) => response.json())
         .then((data) => {
-          this.$store.commit("ADD_PROFILE", data);
+          store.commit("ADD_PROFILE", data);
           let logic = true;
-          this.$store.commit("ADD_ENTER", logic);
-          if (data) {
+          store.commit("ADD_ENTER", logic);
+          return data;
+        })
+        .then((data) => {
+          if (data.token) {
             document.location.href = "#/loisir";
           }
-          console.log("dataOK", data);
         });
-    },
+    }
+
+    function onInvalidSubmit() {
+      const submitBtn = document.querySelector(".submit-btn");
+      submitBtn.classList.add("invalid");
+      setTimeout(() => {
+        submitBtn.classList.remove("invalid");
+      }, 1000);
+    }
+
+    // Using yup to generate a validation schema
+    // https://vee-validate.logaretm.com/v4/guide/validation#validation-schemas-with-yup
+    const schema = Yup.object().shape({
+      email: Yup.string().email().required(),
+      password: Yup.string().min(6).required(),
+    });
+
+    return {
+      onSubmit,
+      schema,
+      onInvalidSubmit,
+    };
   },
-  computed: {
-    ...mapGetters(["getEnter"]),
-    isComplete() {
-      return this.email != "" && this.password != "";
-    },
+  methods: {
   },
+  computed: {},
   mounted: function () {},
 };
 </script>
@@ -200,84 +163,6 @@ form {
   align-items: center;
   width: 100%;
 }
-.container-form {
-  width: 100%;
-  margin-top: 5%;
-  & .content-form {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    width: 30%;
-    margin-bottom: 25px;
-    & label {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      font-size: clamp(12px, 0.8vw, 15px);
-      color: #f1f1f1;
-      font-family: "Raleway", sans-serif;
-      transform: translateY(-50%);
-      transition: 0.4s ease-out;
-      cursor: text;
-    }
-    & input {
-      display: block;
-      width: 100%;
-      padding: 10px 0px;
-      border: none;
-      outline: none;
-      background: none;
-      border-bottom: 2px solid #fbcfc9;
-      color: #f1f1f1;
-      font-size: clamp(12px, 0.8vw, 15px);
-      font-family: "Raleway", sans-serif;
-      transition: 0.4s ease-out;
-      &::-webkit-input-placeholder {
-        color: rgba(255, 0, 0, 0.774);
-      }
-    }
-    &:nth-child(3) {
-      justify-content: center;
-      margin-bottom: 10px;
-      margin-top: 50px;
-    }
-    & .btn-form {
-      position: relative;
-      width: 110px;
-      font-size: clamp(12px, 0.8vw, 15px);
-      border: none;
-      background: none;
-      cursor: pointer;
-      color: #fbcfc9;
-      padding: 15px;
-      border: 2px solid #fbcfc9;
-      border-radius: 30px;
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.2;
-      }
-    }
-    &:focus-within label,
-    &.animation label {
-      top: 0;
-      transform: translateY(-100%);
-      color: #f3ccc1;
-      font-size: clamp(12px, 0.5vw, 15px);
-    }
-  }
-}
-.container-error {
-  position: absolute;
-  display: flex;
-  justify-content: space-around;
-  top: -30px;
-  width: 300px;
-  height: 20px;
-  color: #e20000;
-  font-size: clamp(12px, 0.6vw, 15px);
-  font-family: "Raleway", sans-serif;
-  text-align: center;
-}
 .forgotpassword {
   display: flex;
   justify-content: center;
@@ -296,5 +181,86 @@ form {
       border-bottom-color: #fbcfc9;
     }
   }
+}
+//New css
+
+$primary-color: #c25172;
+$error-color: #f23648;
+$error-bg-color: #fddfe2;
+$success-color: #21a67a;
+$success-bg-color: #e0eee4;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  margin: 0px auto;
+  padding-bottom: 50px;
+  padding-top: 10px;
+}
+
+.submit-btn {
+  background: $primary-color;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-family: "Raleway", sans-serif;
+  padding: 10px 15px;
+  display: block;
+  width: 50%;
+  //margin-top: 40px;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  border: 2px solid #fbcfc9;
+  border-radius: 30px;
+}
+
+.submit-btn.invalid {
+  animation: shake 0.3s;
+  /* When the animation is finished, start again */
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px);
+  }
+  10% {
+    transform: translate(-1px, -2px);
+  }
+  20% {
+    transform: translate(-3px, 0px);
+  }
+  30% {
+    transform: translate(3px, 2px);
+  }
+  40% {
+    transform: translate(1px, -1px);
+  }
+  50% {
+    transform: translate(-1px, 2px);
+  }
+  60% {
+    transform: translate(-3px, 1px);
+  }
+  70% {
+    transform: translate(3px, 1px);
+  }
+  80% {
+    transform: translate(-1px, -1px);
+  }
+  90% {
+    transform: translate(1px, 2px);
+  }
+  100% {
+    transform: translate(1px, -2px);
+  }
+}
+
+.submit-btn:hover {
+  transform: scale(1.05);
 }
 </style>

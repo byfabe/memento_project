@@ -350,7 +350,6 @@ export default {
       .then((response) => response.json())
       .then((data) => {
         this.posts = data;
-        console.log("dataOKGET", data);
       });
   },
 };

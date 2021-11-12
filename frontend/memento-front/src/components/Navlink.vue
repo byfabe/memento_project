@@ -6,7 +6,7 @@
         class="far fa-sticky-note icon-menu i1 plus"
       ></i>
       <a href=""
-        ><i class="far fa-address-card icon-menu i1 profile"></i
+        ><i class="fas fa-power-off icon-menu i1 profile"></i
       ></a>
     </div>
   </div>
