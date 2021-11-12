@@ -8,55 +8,38 @@
         <span class="bold">mémoire</span> !
       </p>
       <div class="container-form">
-        <form action="">
-          <div class="content-form">
-            <label for="mail">E-mail</label>
-            <input
-              @input="input"
-              type="text"
-              id="mail"
-              required
-              v-model="email"
-              :placeholder="[[placeholderMail]]"
-            />
-          </div>
-          <div class="content-form">
-            <label for="password">Mot de passe</label>
-            <input
-              @input="input"
-              type="password"
-              id="password"
-              required
-              v-model="password"
-              :placeholder="[[placeholderPass]]"
-            />
-          </div>
-          <div class="content-form">
-            <label for="confirm-password">Confirmer mot de passe</label>
-            <input
-              @input="input"
-              type="password"
-              id="confirm-password"
-              required
-              v-model="confirmPassword"
-              :placeholder="[[placeholderConfirmPass]]"
-            />
-          </div>
-          <div class="content-form">
-            <button
-              @click="
-                emailValidation();
-                passValidation();
-                passConfirmValidation();
-                validation();
-              "
-              :disabled="!isComplete"
-              class="btn-form"
-            >
-              Valider
-            </button>
-          </div>
-        </form>
+        <Form
+          class="form"
+          @submit="onSubmit"
+          :validation-schema="schema"
+          @invalid-submit="onInvalidSubmit"
+        >
+          <TextInput
+            v-model="email"
+            name="email"
+            type="email"
+            label="E-mail"
+            placeholder="Votre adresse email"
+            success-message="Got it, we won't spam you!"
+          />
+          <TextInput
+            v-model="password"
+            name="password"
+            type="password"
+            label="Mot de passe"
+            placeholder="Votre mot de passe"
+            success-message="Nice and secure!"
+          />
+          <TextInput
+            name="confirm_password"
+            type="password"
+            label="Confirmer mot de passe"
+            placeholder="Entrez à nouveau"
+            success-message="Glad you remembered it!"
+          />
+
+          <button class="submit-btn" type="submit">S'inscrire</button>
+        </Form>
       </div>
       <div class="forgotpassword">
         <a href="">Mot de passe oublié ?</a>
@@ -68,22 +51,84 @@
 </template>
 
 <script>
+import { Form } from "vee-validate";
+import * as Yup from "yup";
+import TextInput from "../components/TextInput.vue";
+import { setLocale } from "yup";
+setLocale({
+  string: {
+    email: "Email invalide",
+    min: "Mot de passe min. 6 caractères",
+  },
+  mixed: {
+    required: "",
+  },
+});
 export default {
-  data() {
+  name: "SignupForm",
+  components: {
+    TextInput,
+    Form,
+  },
+  setup() {
+    function onSubmit(values) {
+     let value = JSON.stringify(values);
+      console.log(value);
+    }
+
+    function onInvalidSubmit() {
+      const submitBtn = document.querySelector(".submit-btn");
+      submitBtn.classList.add("invalid");
+      console.log("ko");
+      setTimeout(() => {
+        submitBtn.classList.remove("invalid");
+      }, 1000);
+    }
+
+    // Using yup to generate a validation schema
+    // https://vee-validate.logaretm.com/v4/guide/validation#validation-schemas-with-yup
+    const schema = Yup.object().shape({
+      email: Yup.string().email().required(),
+      password: Yup.string().min(6).required(),
+      confirm_password: Yup.string()
+        .required()
+        .oneOf([Yup.ref("password")], "Mot de passe non identique"),
+    });
+
     return {
       email: "",
       password: "",
-      confirmPassword: "",
-      placeholderMail: "",
-      placeholderPass: "",
-      placeholderConfirmPass: "",
+      onSubmit,
+      schema,
+      onInvalidSubmit,
     };
   },
+  // data() {
+  //   return {
+
+  //     email: "",
+  //     password: "",
+  //     confirmPassword: "",
+  //     placeholderMail: "",
+  //     placeholderPass: "",
+  //     placeholderConfirmPass: "",
+  //   };
+  // },
   methods: {
     input(e) {
-      if (this.email || this.placeholderMail != "") {
+      if (
+        this.email != "" ||
+        this.placeholderMail != "" ||
+        this.password != "" ||
+        this.confirmPassword != ""
+      ) {
         e.target.parentNode.classList.add("animation");
-      } else if (this.email || this.placeholderMail == "") {
+      } else if (
+        this.email == "" ||
+        this.placeholderMail == "" ||
+        this.password == "" ||
+        this.confirmPassword == ""
+      ) {
         e.target.parentNode.classList.remove("animation");
       }
     },
@@ -172,7 +217,6 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: space-around;
     width: clamp(600px, 35%, 800px);
     height: clamp(470px, 470px, 600px);
     min-height: 470px;
@@ -195,69 +239,81 @@ export default {
     }
   }
 }
-.container-form {
-  width: 30%;
-  margin-top: 5%;
-  & .content-form {
-    position: relative;
-    display: flex;
-    margin-bottom: 25px;
-    & label {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      font-size: clamp(12px, 0.8vw, 15px);
-      color: #f1f1f1;
-      font-family: "Raleway", sans-serif;
-      transform: translateY(-50%);
-      transition: 0.4s ease-out;
-      cursor: text;
-    }
-    & input {
-      display: block;
-      width: 100%;
-      padding: 10px 0px;
-      border: none;
-      outline: none;
-      background: none;
-      border-bottom: 2px solid #fbcfc9;
-      color: #f1f1f1;
-      font-size: clamp(12px, 0.8vw, 15px);
-      font-family: "Raleway", sans-serif;
-      transition: 0.4s ease-out;
-      &::-webkit-input-placeholder {
-        color: rgba(255, 0, 0, 0.774);
-      }
-    }
-    &:nth-child(4) {
-      justify-content: center;
-      margin-bottom: 20px;
-      margin-top: 40px;
-    }
-    & .btn-form {
-      width: 110px;
-      font-size: clamp(12px, 0.8vw, 15px);
-      border: none;
-      background: none;
-      cursor: pointer;
-      color: #fbcfc9;
-      padding: 15px;
-      border: 2px solid #fbcfc9;
-      border-radius: 30px;
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.2;
-      }
-    }
-    &:focus-within label,
-    &.animation label {
-      top: 0;
-      transform: translateY(-100%);
-      color: #f3ccc1;
-      font-size: clamp(12px, 0.5vw, 15px);
-    }
-  }
-}
+// .container-form {
+//   width: 30%;
+//   margin-top: 5%;
+//   & .content-form {
+//     position: relative;
+//     display: flex;
+//     margin-bottom: 25px;
+//     & label {
+//       position: absolute;
+//       top: 50%;
+//       left: 0;
+//       font-size: clamp(12px, 0.8vw, 15px);
+//       color: #f1f1f1;
+//       font-family: "Raleway", sans-serif;
+//       transform: translateY(-50%);
+//       transition: 0.4s ease-out;
+//       cursor: text;
+//     }
+//     & input {
+//       display: block;
+//       width: 100%;
+//       padding: 10px 0px;
+//       border: none;
+//       outline: none;
+//       background: none;
+//       border-bottom: 2px solid #fbcfc9;
+//       color: #f1f1f1;
+//       font-size: clamp(12px, 0.8vw, 15px);
+//       font-family: "Raleway", sans-serif;
+//       transition: 0.4s ease-out;
+//       &::-webkit-input-placeholder {
+//         color: rgba(255, 0, 0, 0.774);
+//       }
+//     }
+//     &:nth-child(4) {
+//       justify-content: center;
+//       margin-bottom: 20px;
+//       margin-top: 40px;
+//     }
+//     & .btn-form {
+//       width: 110px;
+//       font-size: clamp(12px, 0.8vw, 15px);
+//       border: none;
+//       background: none;
+//       cursor: pointer;
+//       color: #fbcfc9;
+//       padding: 15px;
+//       border: 2px solid #fbcfc9;
+//       border-radius: 30px;
+//       &:disabled {
+//         cursor: not-allowed;
+//         opacity: 0.2;
+//       }
+//     }
+//     &:focus-within label,
+//     &.animation label {
+//       top: 0;
+//       transform: translateY(-100%);
+//       color: #f3ccc1;
+//       font-size: clamp(12px, 0.5vw, 15px);
+//     }
+//   }
+// }
+// .container-error {
+//   position: absolute;
+//   display: flex;
+//   justify-content: space-around;
+//   top: -30px;
+//   width: 450px;
+//   height: 20px;
+//   color: #e20000;
+//   font-size: clamp(12px, 0.6vw, 15px);
+//   font-family: "Raleway", sans-serif;
+//   text-align: center;
+// }
 .forgotpassword {
   display: flex;
   justify-content: center;
@@ -277,5 +333,87 @@ export default {
       border-bottom-color: #fbcfc9;
     }
   }
+}
+
+//New css
+
+$primary-color: #c25172;
+$error-color: #f23648;
+$error-bg-color: #fddfe2;
+$success-color: #21a67a;
+$success-bg-color: #e0eee4;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  margin: 0px auto;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.submit-btn {
+  background: $primary-color;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-family: "Raleway", sans-serif;
+  padding: 10px 15px;
+  display: block;
+  width: 50%;
+  //margin-top: 40px;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  border: 2px solid #fbcfc9;
+  border-radius: 30px;
+}
+
+.submit-btn.invalid {
+  animation: shake 0.3s;
+  /* When the animation is finished, start again */
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px);
+  }
+  10% {
+    transform: translate(-1px, -2px);
+  }
+  20% {
+    transform: translate(-3px, 0px);
+  }
+  30% {
+    transform: translate(3px, 2px);
+  }
+  40% {
+    transform: translate(1px, -1px);
+  }
+  50% {
+    transform: translate(-1px, 2px);
+  }
+  60% {
+    transform: translate(-3px, 1px);
+  }
+  70% {
+    transform: translate(3px, 1px);
+  }
+  80% {
+    transform: translate(-1px, -1px);
+  }
+  90% {
+    transform: translate(1px, 2px);
+  }
+  100% {
+    transform: translate(1px, -2px);
+  }
+}
+
+.submit-btn:hover {
+  transform: scale(1.05);
 }
 </style>

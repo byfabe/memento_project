@@ -18,7 +18,6 @@
               v-model="email"
               :placeholder="[[placeholderMail]]"
             />
-            <ErrorMessage name="email" />
           </div>
           <div class="content-form">
             <label for="password">Mot de passe</label>
@@ -31,9 +30,16 @@
               v-model="password"
               :placeholder="[[placeholderPass]]"
             />
-            <ErrorMessage name="password" />
           </div>
-          <div class="content-form">
+          <div class="content-form form-btn">
+            <div class="container-error">
+              <div class="error-mail">
+                <ErrorMessage name="email" class="error" />
+              </div>
+              <div class="error-password">
+                <ErrorMessage name="password" class="error" />
+              </div>
+            </div>
             <button
               @click="validation()"
               :disabled="!isComplete"
@@ -57,13 +63,15 @@
 import { Field, Form, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import { mapGetters } from "vuex";
-import { configure } from "vee-validate";
-import { localize } from "@vee-validate/i18n";
-import fr from "@vee-validate/i18n/dist/locale/fr.json";
-configure({
-  generateMessage: localize({
-    fr,
-  }),
+import { setLocale } from "yup";
+setLocale({
+  string: {
+    email: "Email invalide",
+    min: "Mot de passe min. 8 caractères",
+  },
+  mixed: {
+    required: ""
+  }
 });
 export default {
   components: {
@@ -77,8 +85,6 @@ export default {
       passwordRules: yup.string().required().min(8),
       email: "",
       password: "",
-      placeholderMail: "",
-      placeholderPass: "",
     };
   },
   methods: {
@@ -187,13 +193,21 @@ export default {
     }
   }
 }
+form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
 .container-form {
-  width: 30%;
+  width: 100%;
   margin-top: 5%;
   & .content-form {
     position: relative;
     display: flex;
     justify-content: center;
+    width: 30%;
     margin-bottom: 25px;
     & label {
       position: absolute;
@@ -228,6 +242,7 @@ export default {
       margin-top: 50px;
     }
     & .btn-form {
+      position: relative;
       width: 110px;
       font-size: clamp(12px, 0.8vw, 15px);
       border: none;
@@ -250,6 +265,18 @@ export default {
       font-size: clamp(12px, 0.5vw, 15px);
     }
   }
+}
+.container-error {
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  top: -30px;
+  width: 300px;
+  height: 20px;
+  color: #e20000;
+  font-size: clamp(12px, 0.6vw, 15px);
+  font-family: "Raleway", sans-serif;
+  text-align: center;
 }
 .forgotpassword {
   display: flex;
