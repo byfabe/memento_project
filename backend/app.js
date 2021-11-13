@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
+const cors = require('cors')
 require("dotenv").config();
 const app = express();
 
@@ -17,6 +18,8 @@ mongoose
 // Body-parser config
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(cors())
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
