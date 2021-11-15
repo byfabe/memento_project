@@ -6,15 +6,22 @@ export default createStore({
     enter: false,
     email: "",
     token: "",
-    fetchUrl: "https://rocky-inlet-14615.herokuapp.com/api/",
+    backgroundColor: "",
+    title: "",
+    fetchUrl: "http://localhost:3000/api/",
+    //"https://rocky-inlet-14615.herokuapp.com/api/"
   },
   getters: {
     getEnter: (state) => state.enter,
+    getTitle: (state) => state.title,
+    getBackground: (state) => state.backgroundColor
   },
   mutations: {
     ADD_PROFILE(state, data) {
       state.token = data.token;
       state.email = data.email;
+      state.backgroundColor = data.backgroundColor;
+      state.title = data.title;
     },
     ADD_ENTER(state, logic) {
       state.enter = logic

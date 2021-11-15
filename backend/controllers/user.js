@@ -2,6 +2,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const user = require("../models/user");
 
 // Créé un compte utilisateur
 exports.signup = (req, res, next) => {
@@ -10,6 +11,8 @@ exports.signup = (req, res, next) => {
     .then((hash) => {
       const user = new User({
         email: req.body.email,
+        backgroundColor: "w1",
+        title: "memento",
         password: hash,
       });
       user
@@ -18,6 +21,8 @@ exports.signup = (req, res, next) => {
           res.status(201).json({
             email: user.email,
             userId: user._id,
+            backgroundColor: user.backgroundColor,
+            title: user.title,
             token: jwt.sign(
               // Création d'un token
               { userId: user._id }, // Encode l'id du compte utilisateur
@@ -48,6 +53,8 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             email: user.email,
             userId: user._id,
+            backgroundColor: user.backgroundColor,
+            title: user.title,
             token: jwt.sign(
               // Création d'un token
               { userId: user._id }, // Encode l'id du compte utilisateur
@@ -59,4 +66,27 @@ exports.login = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
+};
+
+//Modifier compte utilisateur
+exports.modifyUser = (req, res, next) => {
+  User.updateOne(
+    { _id: res.locals.userId },
+    {
+      backgroundColor: req.body.backgroundColor,
+      title: req.body.title,
+    }
+  ).then(() =>
+    res.status(200).json({
+      message: "Utilisateur modifié !",
+    })
+  );
+  User.findOne({ _id: res.locals.userId })
+    .then((user) =>
+      res.status(201).json({
+        title: user.title,
+        backgroundColor: user.backgroundColor,
+      })
+    )
+    .catch((error) => res.status(400).json({ error }));
 };

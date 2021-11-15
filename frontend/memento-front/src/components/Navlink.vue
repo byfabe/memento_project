@@ -2,7 +2,7 @@
   <div class="container-main-nav">
     <div class="menu m1">
       <i
-        @click="addPost"
+        @click="addPost(); limitPost()"
         class="far fa-plus-square icon-menu i1 plus"
       ></i>
       <a href=""><i class="far fa-address-card icon-menu i1"></i></a>
@@ -22,35 +22,17 @@ export default {
   },
   methods: {
     addPost() {
-      // let post = document.createElement("div");
-      // post.innerHTML =
-      // `<textarea
-      //     class="input-box"
-      //     v-model="alltext"
-      //     name="text-box"
-      //     id="text-box"
-      //     rows="10"
-      //     maxlength="65"
-      //   ></textarea>`;
-      // let parent = document.querySelector(".workspace");
-      // function setAttributes(el, options) {
-      //   Object.keys(options).forEach(function (attr) {
-      //     el.setAttribute(attr, options[attr]);
-      //   });
-      // }
-      // let classColor = ["red", "blue", "yellow", "green"];
-      // let color = classColor[Math.floor(Math.random() * classColor.length)];
-      // let randomLeft = Math.floor(Math.random() * 60 ) + 20
-      // let randomTop = Math.floor(Math.random() * 60 ) + 20
+      let classColor = ["red", "blue", "green"];
+      let color = classColor[Math.floor(Math.random() * classColor.length)];
+      let randomLeft = Math.floor(Math.random() * 60 ) + 20
+      let randomTop = Math.floor(Math.random() * 60 ) + 20
       //  //20 correspond au nombre min
       //  //60 correspond au nombre de possibilités
-      // setAttributes(post, {
-      //   class: `box ${color}`,
-      //   style: `left: ${randomLeft}%; top: ${randomTop}%`,
-      // });
-      // parent.appendChild(post);
       let valueForm = {
         text: "",
+        x: randomLeft,
+        y: randomTop,
+        color: color
       };
       this.$store
         .dispatch("fetchPost", {
@@ -61,14 +43,23 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           this.$emit("newPost", data);
-          console.log("dataOK", data);
         });
     },
+    limitPost() {
+      let allBox = document.querySelectorAll('.box');
+      let btnAddPost = document.querySelector('.plus')
+      if (allBox.length > 5) {
+        btnAddPost.classList.add('stopPost')
+      }
+    }
   },
 };
 </script>
 
 <style scoped lang="scss">
+.stopPost {
+  color: red !important;
+}
 .container-main-nav {
   display: flex;
   align-items: center;

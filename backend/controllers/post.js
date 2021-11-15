@@ -4,12 +4,18 @@ exports.createPost = (req, res, next) => {
   const post = new Post({
     userId: res.locals.userId,
     text: req.body.text,
+    x: req.body.x,
+    y: req.body.y,
+    color: req.body.color
   });
   post
     .save()
     .then((post) =>
       res.status(201).json({
         _id: post._id,
+        x: post.x,
+        y: post.y,
+        color: post.color,
         message: "Post enregistré !",
       })
     )

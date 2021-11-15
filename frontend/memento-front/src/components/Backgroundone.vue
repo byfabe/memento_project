@@ -1,7 +1,8 @@
 <template>
   <div class="container-main">
+    <button @click="limitPost">YEP</button>
     <Navlink v-on:newPost="addPost" />
-    <div @mousewheel="scrollColor" class="workspace w1">
+    <div @mousewheel="scrollColor" class="workspace" :class="getBackground">
       <div class="title">
         <p class="title-color title-color-1">{{ this.title }}</p>
         <div class="container-fullscreen">
@@ -14,7 +15,7 @@
             class="input-title hidden"
             v-model="title"
             maxlength="7"
-            :placeholder="[[placeholderTitle]]"
+            @keyup="fetchTitle()"
           />
           <div
             class="background-color bg1 hidden"
@@ -80,7 +81,7 @@
 </template>
 
 <script>
-//import { mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import Navlink from "./Navlink.vue";
@@ -91,7 +92,7 @@ export default {
   setup() {},
   data() {
     return {
-      placeholderTitle: "memento",
+      backgroundColor: "",
       title: "",
       classColor: "",
       posts: [],
@@ -118,11 +119,12 @@ export default {
     addPost(data) {
       this.posts.push({
         text: "",
-        x: 20,
-        y: 20,
+        x: data.x,
+        y: data.y,
         _id: data._id,
+        color: data.color
       });
-      console.log(this.posts);
+      console.log("dataAddpost", data);
     },
     //Nouveau post devient draggable
     makeDraggable(element) {
@@ -148,47 +150,6 @@ export default {
         duration: 1,
       });
     },
-    // Changement de page au scroll
-    // scrollColor(e) {
-    //   let workspace = document.querySelector(".workspace");
-    //   let titleColor = document.querySelector(".title-color");
-    //   if (e.deltaY > 0 && workspace.classList.contains("w1")) {
-    //     workspace.classList.remove("w1");
-    //     workspace.classList.add("w2");
-    //     titleColor.classList.remove("title-color-1");
-    //     titleColor.classList.add("title-color-2");
-    //     //document.location.href = "/#/travail";
-    //   } else if (e.deltaY > 0 && workspace.classList.contains("w2")) {
-    //     workspace.classList.remove("w2");
-    //     workspace.classList.add("w3");
-    //     titleColor.classList.remove("title-color-2");
-    //     titleColor.classList.add("title-color-3");
-    //     //document.location.href = "/#/divers";
-    //   } else if (e.deltaY > 0 && workspace.classList.contains("w3")) {
-    //     workspace.classList.remove("w3");
-    //     workspace.classList.add("w1");
-    //     titleColor.classList.remove("title-color-3");
-    //     titleColor.classList.add("title-color-1");
-    //   } else if (e.deltaY < 0 && workspace.classList.contains("w1")) {
-    //     workspace.classList.remove("w1");
-    //     workspace.classList.add("w3");
-    //     titleColor.classList.remove("title-color-1");
-    //     titleColor.classList.add("title-color-3");
-    //     //document.location.href = "/#/travail";
-    //   } else if (e.deltaY < 0 && workspace.classList.contains("w2")) {
-    //     workspace.classList.remove("w2");
-    //     workspace.classList.add("w1");
-    //     titleColor.classList.remove("title-color-2");
-    //     titleColor.classList.add("title-color-1");
-    //     //document.location.href = "/#/divers";
-    //   } else if (e.deltaY < 0 && workspace.classList.contains("w3")) {
-    //     workspace.classList.remove("w3");
-    //     workspace.classList.add("w2");
-    //     titleColor.classList.remove("title-color-3");
-    //     titleColor.classList.add("title-color-2");
-    //   }
-    // },
-
     //Calcul de la position du post + fetch position du post
     positionPost(index, event) {
       let post = this.posts[index];
@@ -344,6 +305,7 @@ export default {
         menu.classList.add("m3");
       }
     },
+    //Changement couleur du post "red"
     changePostColorRed(e) {
       e.color = "red";
       let valueForm = {
@@ -358,6 +320,7 @@ export default {
         .then((response) => response.json())
         .then(() => {});
     },
+    //Changement couleur du post "blue"
     changePostColorBlue(e) {
       e.color = "blue";
       let valueForm = {
@@ -372,6 +335,7 @@ export default {
         .then((response) => response.json())
         .then(() => {});
     },
+    //Changement couleur du post "green"
     changePostColorGreen(e) {
       e.color = "green";
       let valueForm = {
@@ -386,14 +350,24 @@ export default {
         .then((response) => response.json())
         .then(() => {});
     },
+    fetchTitle() {
+      let valueForm = {
+        title: this.title,
+      };
+      this.$store
+        .dispatch("fetchPost", {
+          endpoint: "auth/modify",
+          valueForm: valueForm,
+          method: "PUT",
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("fetchTitle", data);
+        });
+    },
   },
   computed: {
-    //Random color post-it
-    postColor() {
-      return this.classColor[
-        Math.floor(Math.random() * this.classColor.length)
-      ];
-    },
+    ...mapGetters(["getTitle", "getBackground"])
   },
   //Fetch les posts au chargement de la page
   mounted: function () {
@@ -408,6 +382,7 @@ export default {
       .then((response) => response.json())
       .then((data) => {
         this.posts = data;
+        this.title = this.$store.getters.getTitle
       });
   },
 };
@@ -671,7 +646,5 @@ export default {
 }
 </style>
 
-
-//:style="{ transform: translate(post.x + '%', post.y + '%') }"
 //@mouseup.self="positionPost(post, $event)"
 // setTimeout(() => {},5000);
