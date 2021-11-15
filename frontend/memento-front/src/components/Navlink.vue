@@ -3,10 +3,11 @@
     <div class="menu m1">
       <i
         @click="addPost"
-        class="far fa-sticky-note icon-menu i1 plus"
+        class="far fa-plus-square icon-menu i1 plus"
       ></i>
+      <a href=""><i class="far fa-address-card icon-menu i1"></i></a>
       <a href=""
-        ><i class="fas fa-power-off icon-menu i1 profile"></i
+        ><i class="fas fa-sign-out-alt icon-menu i1 profile"></i
       ></a>
     </div>
   </div>
@@ -81,15 +82,15 @@ export default {
   top: 20%;
   margin-left: 1%;
   width: clamp(150px, 15vw, 200px);
-  height: clamp(200px, 40%, 500px);
+  height: clamp(350px, 50%, 500px);
   border-radius: 98% 2% 95% 5% / 3% 97% 3% 97%;
   & .plus {
     cursor: pointer;
   }
 }
 .m1 {
-  box-shadow: 13px 11px 15px -15px #f79675;
-  border: 3px solid #f79675;
+  box-shadow: 13px 11px 15px -15px #f76e6e;
+  border: 3px solid #f76e6e;
 }
 .m2 {
   box-shadow: 13px 11px 15px -15px rgba(0, 98, 128, 0.836);
@@ -108,7 +109,7 @@ export default {
 .i1 {
   font-size: clamp(15px, 3.5vw, 80px);
   font-weight: 200;
-  color: #f78d79;
+  color: #f76e6e;
   transition: ease-in 0.2s;
 }
 .i2 {
@@ -122,24 +123,5 @@ export default {
   font-weight: 200;
   color: #33c77c;
   transition: ease-in 0.2s;
-}
-.plus {
-  &:hover {
-    animation: color-icon 1.5s;
-  }
-}
-@keyframes color-icon {
-  20% {
-    color: #83d0cbb7;
-  }
-  40% {
-    color: #82c26eb0;
-  }
-  60% {
-    color: #83d0cbb7;
-  }
-  80% {
-    color: #82c26eb0;
-  }
 }
 </style>

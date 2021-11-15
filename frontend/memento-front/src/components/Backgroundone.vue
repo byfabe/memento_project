@@ -14,6 +14,7 @@
             class="input-title hidden"
             v-model="title"
             maxlength="7"
+            :placeholder="[[placeholderTitle]]"
           />
           <div
             class="background-color bg1 hidden"
@@ -32,7 +33,7 @@
       <transition-group v-on:enter="makeDraggable">
         <div
           class="box"
-          :class="postColor"
+          :class="post.color"
           :style="{ left: post.x + '%', top: post.y + '%' }"
           v-for="(post, index) in posts"
           :key="post"
@@ -51,13 +52,27 @@
           <textarea
             class="input-box"
             v-model="post.text"
-            placeholder="Ceci est une note."
+            placeholder="Ceci est une note !"
             name="text-box"
             id="text-box"
             rows="4"
             maxlength="60"
             @keyup="fetchValue(post)"
           ></textarea>
+          <div class="select-color" :class="post.color">
+            <div
+              class="btn-color-post red"
+              @click="changePostColorRed(post)"
+            ></div>
+            <div
+              class="btn-color-post blue"
+              @click="changePostColorBlue(post)"
+            ></div>
+            <div
+              class="btn-color-post green"
+              @click="changePostColorGreen(post)"
+            ></div>
+          </div>
         </div>
       </transition-group>
     </div>
@@ -76,8 +91,9 @@ export default {
   setup() {},
   data() {
     return {
-      title: "memento",
-      classColor: ["red", "blue", "green"],
+      placeholderTitle: "memento",
+      title: "",
+      classColor: "",
       posts: [],
     };
   },
@@ -328,6 +344,48 @@ export default {
         menu.classList.add("m3");
       }
     },
+    changePostColorRed(e) {
+      e.color = "red";
+      let valueForm = {
+        color: e.color,
+      };
+      this.$store
+        .dispatch("fetchPost", {
+          endpoint: "post/" + e._id,
+          valueForm: valueForm,
+          method: "PUT",
+        })
+        .then((response) => response.json())
+        .then(() => {});
+    },
+    changePostColorBlue(e) {
+      e.color = "blue";
+      let valueForm = {
+        color: e.color,
+      };
+      this.$store
+        .dispatch("fetchPost", {
+          endpoint: "post/" + e._id,
+          valueForm: valueForm,
+          method: "PUT",
+        })
+        .then((response) => response.json())
+        .then(() => {});
+    },
+    changePostColorGreen(e) {
+      e.color = "green";
+      let valueForm = {
+        color: e.color,
+      };
+      this.$store
+        .dispatch("fetchPost", {
+          endpoint: "post/" + e._id,
+          valueForm: valueForm,
+          method: "PUT",
+        })
+        .then((response) => response.json())
+        .then(() => {});
+    },
   },
   computed: {
     //Random color post-it
@@ -428,12 +486,14 @@ export default {
     top: 0;
     right: 0;
     width: 70%;
-    padding: 15px 0 10px 0;
+    padding: 10px 0 10px 0;
+    margin-top: 15px;
     border: none;
     outline: none;
-    background: none;
-    border-bottom: 2px solid #fbcfc9;
-    color: #f1f1f1;
+    border-radius: 5px;
+    //background: none;
+    //border-bottom: 2px solid #fbcfc9;
+    color: #292929;
     font-size: clamp(12px, 1.2vw, 30px);
     font-family: "Raleway", sans-serif;
     text-align: center;
@@ -570,6 +630,40 @@ export default {
   &:hover {
     opacity: 0.8;
     transition: 0.2s ease-out;
+  }
+  &:hover ~ .select-color {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+}
+.select-color {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: absolute;
+  border-radius: 98% 2% 97% 1% / 1% 97% 2% 97%;
+  border: 2px solid rgba(0, 0, 0, 0.23);
+  height: 40px;
+  width: 230px;
+  left: 18px;
+  bottom: -34px;
+  display: none;
+  cursor: auto;
+  &:hover {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  & .btn-color-post {
+    width: 27px;
+    height: 27px;
+    border: 2px solid rgb(228, 228, 228);
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 }
 .hidden {

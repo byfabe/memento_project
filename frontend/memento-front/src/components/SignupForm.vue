@@ -19,21 +19,18 @@
             type="email"
             label="E-mail"
             placeholder="Votre adresse email"
-            success-message="Got it, we won't spam you!"
           />
           <TextInput
             name="password"
             type="password"
             label="Mot de passe"
             placeholder="Votre mot de passe"
-            success-message="Nice and secure!"
           />
           <TextInput
             name="confirm_password"
             type="password"
             label="Confirmer mot de passe"
             placeholder="Entrez à nouveau"
-            success-message="Glad you remembered it!"
           />
 
           <button class="submit-btn" type="submit">S'inscrire</button>

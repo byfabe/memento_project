@@ -6,7 +6,7 @@ export default createStore({
     enter: false,
     email: "",
     token: "",
-    fetchUrl: "https://rocky-inlet-14615.herokuapp.com/",
+    fetchUrl: "https://rocky-inlet-14615.herokuapp.com/api/",
   },
   getters: {
     getEnter: (state) => state.enter,

@@ -18,14 +18,12 @@
             type="email"
             label="E-mail"
             placeholder="Votre adresse email"
-            success-message="Got it, we won't spam you!"
           />
           <TextInput
             name="password"
             type="password"
             label="Mot de passe"
             placeholder="Votre mot de passe"
-            success-message="Nice and secure!"
           />
 
           <button class="submit-btn" type="submit">C'est parti !</button>
@@ -104,8 +102,7 @@ export default {
       onInvalidSubmit,
     };
   },
-  methods: {
-  },
+  methods: {},
   computed: {},
   mounted: function () {},
 };
@@ -232,22 +229,22 @@ $success-bg-color: #e0eee4;
     transform: translate(-1px, -2px);
   }
   20% {
-    transform: translate(-3px, 0px);
+    transform: translate(-1px, 0px);
   }
   30% {
-    transform: translate(3px, 2px);
+    transform: translate(2px, 1px);
   }
   40% {
     transform: translate(1px, -1px);
   }
   50% {
-    transform: translate(-1px, 2px);
+    transform: translate(-1px, 1px);
   }
   60% {
-    transform: translate(-3px, 1px);
+    transform: translate(-1px, 1px);
   }
   70% {
-    transform: translate(3px, 1px);
+    transform: translate(2px, 1px);
   }
   80% {
     transform: translate(-1px, -1px);
@@ -256,7 +253,7 @@ $success-bg-color: #e0eee4;
     transform: translate(1px, 2px);
   }
   100% {
-    transform: translate(1px, -2px);
+    transform: translate(1px, -1px);
   }
 }
 
