@@ -1,22 +1,23 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import Workspaceone from "../views/Workspaceone.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
+import Profile from "../views/Profile.vue";
 import store from "../store/index.js";
 
 const routes = [
   {
     path: "/",
-    name: "Signup",
-    component: Signup,
-  },
-  {
-    path: "/signin",
     name: "Signin",
     component: Signin,
   },
   {
-    path: "/loisir",
+    path: "/signup",
+    name: "Signup",
+    component: Signup,
+  },
+  {
+    path: "/board",
     name: "Workspaceone",
     component: Workspaceone,
     beforeEnter(route, redirect, next) {
@@ -27,10 +28,15 @@ const routes = [
       }
     },
   },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+  },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 

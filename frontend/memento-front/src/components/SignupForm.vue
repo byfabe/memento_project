@@ -39,7 +39,7 @@
       <div class="forgotpassword">
         <a href="">Mot de passe oublié ?</a>
         <span class="space-forgotpassword">|</span>
-        <a href="#/signin">Se connecter</a>
+        <a href="/">Se connecter</a>
       </div>
     </div>
   </div>
@@ -84,7 +84,7 @@ export default {
         })
         .then((data) => {
           if (data.token) {
-            document.location.href = "#/loisir";
+            document.location.href = "/board";
           }
         });
     }

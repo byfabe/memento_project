@@ -11,6 +11,7 @@
     "@vee-validate/i18n": "^4.5.3",
     "core-js": "^3.6.5",
     "gsap": "^3.8.0",
+    "moment": "^2.29.1",
     "vee-validate": "^4.5.5",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",

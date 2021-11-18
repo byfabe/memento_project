@@ -1,21 +1,24 @@
 <template>
   <div class="container-main">
-    <button @click="limitPost">YEP</button>
     <Navlink v-on:newPost="addPost" />
-    <div @mousewheel="scrollColor" class="workspace" :class="getBackground">
+    <div class="workspace" :class="getBackground">
       <div class="title">
-        <p class="title-color title-color-1">{{ this.title }}</p>
+        <p class="title-color title-color-1">{{ getTitle }}</p>
         <div class="container-fullscreen">
           <i class="fas fa-expand fullscreen-icon" @click="fullScreen"></i>
         </div>
         <div class="container-input-title">
-          <i class="fas fa-pencil-alt pencil-icon" @click="removeHidden"></i>
+          <i
+            class="fas fa-pencil-alt pencil-icon"
+            @click="removeHidden(), animContainerCustom()"
+          ></i>
           <input
             type="text"
             class="input-title hidden"
             v-model="title"
             maxlength="7"
             @keyup="fetchTitle()"
+            :placeholder="[[getTitle]]"
           />
           <div
             class="background-color bg1 hidden"
@@ -40,9 +43,12 @@
           :key="post"
           :data-index="index"
         >
-          <i class="fas fa-sort-down down-icon"></i>
+          <i
+            class="fas fa-sort-down down-icon"
+            @mouseover="animSelectColor"
+          ></i>
           <lord-icon
-            @click="deletePost(post)"
+            @click="deletePost(post), animDeletePost($event)"
             src="https://cdn.lordicon.com/gsqxdxog.json"
             trigger="hover"
             colors="primary:#242424,secondary:#242424"
@@ -122,7 +128,7 @@ export default {
         x: data.x,
         y: data.y,
         _id: data._id,
-        color: data.color
+        color: data.color,
       });
       console.log("dataAddpost", data);
     },
@@ -197,19 +203,31 @@ export default {
         }
       );
     },
-    //Fetch pour supprimer un post-it
+    //Fetch pour supprimer un post-it et rediriger post-it vers oldPost
     deletePost(post) {
-      this.$store
-        .dispatch("fetchPost", {
-          endpoint: "post/" + post._id,
-          //valueForm: valueForm,
-          method: "DELETE",
-        })
-        .then((response) => response.json())
-        .then(() => {
-          this.posts = this.posts.filter((item) => item != post);
-        });
-      console.log("post supprimé");
+      setTimeout(() => {
+        this.$store
+          .dispatch("fetchPost", {
+            endpoint: "post/" + post._id,
+            //valueForm: valueForm,
+            method: "DELETE",
+          })
+          .then((response) => response.json())
+          .then(() => {
+            this.posts = this.posts.filter((item) => item != post);
+          });
+
+          let valueForm = {
+          text: post.text,
+          color: post.color,
+        };
+        this.$store
+          .dispatch("fetchPost", {
+            endpoint: "oldpost/",
+            valueForm: valueForm,
+            method: "POST",
+          })
+      }, 1000);
     },
     //Affiche l'input et le choix des background-color sous le bouton "crayon"
     removeHidden() {
@@ -246,9 +264,6 @@ export default {
         workspace.classList.contains("w2") ||
         workspace.classList.contains("w3")
       ) {
-        workspace.classList.remove("w2");
-        workspace.classList.remove("w3");
-        workspace.classList.add("w1");
         for (let i = 0; i < iconMenu.length; i++) {
           iconMenu[i].classList.remove("i2");
           iconMenu[i].classList.remove("i3");
@@ -258,6 +273,19 @@ export default {
         menu.classList.remove("m3");
         menu.classList.add("m1");
       }
+      let valueForm = {
+        backgroundColor: "w1",
+      };
+      this.$store
+        .dispatch("fetchPost", {
+          endpoint: "auth/modify",
+          valueForm: valueForm,
+          method: "PUT",
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          this.$store.commit("ADD_BACKGROUNDCOLOR", data);
+        });
     },
     //Changement couleur pour le bouton "bleu"
     backgroundColorBlue() {
@@ -269,9 +297,6 @@ export default {
         workspace.classList.contains("w1") ||
         workspace.classList.contains("w3")
       ) {
-        workspace.classList.remove("w1");
-        workspace.classList.remove("w3");
-        workspace.classList.add("w2");
         for (let i = 0; i < iconMenu.length; i++) {
           iconMenu[i].classList.remove("i1");
           iconMenu[i].classList.remove("i3");
@@ -281,6 +306,19 @@ export default {
         menu.classList.remove("m3");
         menu.classList.add("m2");
       }
+      let valueForm = {
+        backgroundColor: "w2",
+      };
+      this.$store
+        .dispatch("fetchPost", {
+          endpoint: "auth/modify",
+          valueForm: valueForm,
+          method: "PUT",
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          this.$store.commit("ADD_BACKGROUNDCOLOR", data);
+        });
     },
     //Changement couleur pour le bouton "vert"
     backgroundColorGreen() {
@@ -292,9 +330,6 @@ export default {
         workspace.classList.contains("w1") ||
         workspace.classList.contains("w2")
       ) {
-        workspace.classList.remove("w1");
-        workspace.classList.remove("w2");
-        workspace.classList.add("w3");
         for (let i = 0; i < iconMenu.length; i++) {
           iconMenu[i].classList.remove("i1");
           iconMenu[i].classList.remove("i2");
@@ -304,6 +339,20 @@ export default {
         menu.classList.remove("m2");
         menu.classList.add("m3");
       }
+      let valueForm = {
+        backgroundColor: "w3",
+      };
+      this.$store
+        .dispatch("fetchPost", {
+          endpoint: "auth/modify",
+          valueForm: valueForm,
+          method: "PUT",
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          this.$store.commit("ADD_BACKGROUNDCOLOR", data);
+          console.log(data.backgroundColor);
+        });
     },
     //Changement couleur du post "red"
     changePostColorRed(e) {
@@ -350,6 +399,7 @@ export default {
         .then((response) => response.json())
         .then(() => {});
     },
+    //Fetch le nouveau titre
     fetchTitle() {
       let valueForm = {
         title: this.title,
@@ -362,12 +412,165 @@ export default {
         })
         .then((response) => response.json())
         .then((data) => {
-          console.log("fetchTitle", data);
+          this.$store.commit("ADD_TITLE", data);
         });
+    },
+    //Animation de la petite box du choix des couleurs
+    animSelectColor() {
+      const tl = gsap.timeline();
+      tl.fromTo(
+        ".select-color",
+        {
+          opacity: 0,
+          scale: 0.8,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          ease: "elastic",
+          duration: 1,
+        }
+      );
+    },
+    //Animation à la suppression d'un post
+    animDeletePost(e) {
+      let target = e.target;
+      let parent = target.parentElement; //parent of "target"
+      console.log(parent);
+      const tl = gsap.timeline();
+      tl.fromTo(
+        parent,
+        {
+          transformOrigin: "center",
+          opacity: 1,
+          scale: 1,
+        },
+        {
+          opacity: 0,
+          scale: 0,
+          duration: 0.4,
+        }
+      );
+    },
+    //Animation menu custom
+    animContainerCustom() {
+      const tl = gsap.timeline();
+      let title = document.querySelector(".input-title");
+      if (!title.classList.contains("hidden")) {
+        tl.timeScale(1.5).fromTo(
+          ".input-title",
+          {
+            scale: 0,
+            opacity: 0,
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            ease: "elastic",
+            duration: 2,
+            //delay: 0.1
+          }
+        )
+        .fromTo(
+          ".bg1",
+          {
+            scale: 0,
+            opacity: 0,
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            ease: "elastic",
+            duration: 2,
+            //delay: 0.1
+          }, ">-1.7"
+        )
+        .fromTo(
+          ".bg2",
+          {
+            scale: 0,
+            opacity: 0,
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            ease: "elastic",
+            duration: 2,
+            //delay: 0.1
+          }, ">-1.7"
+        )
+        .fromTo(
+          ".bg3",
+          {
+            scale: 0,
+            opacity: 0,
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            ease: "elastic",
+            duration: 2,
+            //delay: 0.1
+          }, ">-1.7"
+        );
+      // } else {
+      //   tl.fromTo(
+      //     ".input-title",
+      //     {
+      //       scale: 1,
+      //       opacity: 1,
+      //     },
+      //     {
+      //       scale: 0,
+      //       opacity: 0,
+      //       //ease: "elastic",
+      //       duration: 0.4,
+      //     }
+      //   );
+      //   tl.fromTo(
+      //     ".bg1",
+      //     {
+      //       scale: 1,
+      //       opacity: 1,
+      //     },
+      //     {
+      //       scale: 0,
+      //       opacity: 0,
+      //       //ease: "elastic",
+      //       duration: 0.3,
+      //     }
+      //   );
+      //   tl.fromTo(
+      //     ".bg2",
+      //     {
+      //       scale: 1,
+      //       opacity: 1,
+      //     },
+      //     {
+      //       scale: 0,
+      //       opacity: 0,
+      //       //ease: "belastic",
+      //       duration: 0.2,
+      //     }
+      //   );
+      //   tl.fromTo(
+      //     ".bg3",
+      //     {
+      //       scale: 1,
+      //       opacity: 1,
+      //     },
+      //     {
+      //       scale: 0,
+      //       opacity: 0,
+      //       //ease: "elastic",
+      //       duration: 0.4,
+      //     }
+      //   );
+       }
     },
   },
   computed: {
-    ...mapGetters(["getTitle", "getBackground"])
+    ...mapGetters(["getTitle", "getBackground"]),
   },
   //Fetch les posts au chargement de la page
   mounted: function () {
@@ -382,7 +585,6 @@ export default {
       .then((response) => response.json())
       .then((data) => {
         this.posts = data;
-        this.title = this.$store.getters.getTitle
       });
   },
 };
@@ -394,7 +596,7 @@ export default {
   width: 100vw;
   height: 100vh;
   & .w1 {
-    transition: 0.5s ease-in;
+    //transition: 0.5s ease-in;
     width: 100%;
     height: 100%;
     background: linear-gradient(
@@ -493,7 +695,7 @@ export default {
     border-radius: 10px;
     cursor: pointer;
     &:hover {
-      transform: scale(1.1);
+      transform: scale(1.1) !important;
     }
   }
   & .bg1 {
@@ -622,9 +824,10 @@ export default {
   height: 40px;
   width: 230px;
   left: 18px;
-  bottom: -34px;
+  bottom: -38px;
   display: none;
   cursor: auto;
+  transform: rotate(-2deg);
   &:hover {
     display: flex;
     justify-content: space-around;
@@ -647,4 +850,3 @@ export default {
 </style>
 
 //@mouseup.self="positionPost(post, $event)"
-// setTimeout(() => {},5000);

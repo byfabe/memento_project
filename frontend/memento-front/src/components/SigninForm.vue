@@ -1,5 +1,5 @@
 <template>
-  <div class="container-main-signup">
+  <div class="container-main-signin">
     <h1>Memento</h1>
     <div class="container-signup">
       <p class="text-info-signup">
@@ -32,7 +32,7 @@
       <div class="forgotpassword">
         <a href="">Mot de passe oublié ?</a>
         <span class="space-forgotpassword">|</span>
-        <a href="#/">Créer un compte</a>
+        <a href="/signup">Créer un compte</a>
       </div>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default {
         })
         .then((data) => {
           if (data.token) {
-            document.location.href = "#/loisir";
+            document.location.href = "/board";
           }
         });
     }
@@ -109,7 +109,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.container-main-signup {
+.container-main-signin {
   display: flex;
   flex-direction: column;
   justify-content: space-around;

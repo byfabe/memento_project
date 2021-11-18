@@ -1,13 +1,13 @@
 <template>
   <div class="container-main-nav">
     <div class="menu m1">
-      <i
-        @click="addPost(); limitPost()"
-        class="far fa-plus-square icon-menu i1 plus"
-      ></i>
-      <a href=""><i class="far fa-address-card icon-menu i1"></i></a>
-      <a href=""
-        ><i class="fas fa-sign-out-alt icon-menu i1 profile"></i
+      <i @click="addPost()" class="far fa-plus-square icon-menu i1 plus"></i>
+      <a href="/profile"><i class="far fa-address-card icon-menu i1"></i></a>
+      <a href="/"
+        ><i
+          class="fas fa-sign-out-alt icon-menu i1 profile"
+          @click="disconnect"
+        ></i
       ></a>
     </div>
   </div>
@@ -21,45 +21,50 @@ export default {
     };
   },
   methods: {
+    //Ajoute un post vers "/board" avec une limite de 15 post max.
     addPost() {
+      let allBox = document.querySelectorAll(".box");
+      let btnAddPost = document.querySelector(".plus");
       let classColor = ["red", "blue", "green"];
       let color = classColor[Math.floor(Math.random() * classColor.length)];
-      let randomLeft = Math.floor(Math.random() * 60 ) + 20
-      let randomTop = Math.floor(Math.random() * 60 ) + 20
+      let randomLeft = Math.floor(Math.random() * 60) + 20;
+      let randomTop = Math.floor(Math.random() * 60) + 20;
       //  //20 correspond au nombre min
       //  //60 correspond au nombre de possibilités
-      let valueForm = {
-        text: "",
-        x: randomLeft,
-        y: randomTop,
-        color: color
-      };
-      this.$store
-        .dispatch("fetchPost", {
-          endpoint: "post/",
-          valueForm: valueForm,
-          method: "POST",
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          this.$emit("newPost", data);
-        });
-    },
-    limitPost() {
-      let allBox = document.querySelectorAll('.box');
-      let btnAddPost = document.querySelector('.plus')
-      if (allBox.length > 5) {
-        btnAddPost.classList.add('stopPost')
+      if (allBox.length > 14) {
+        btnAddPost.classList.add("invalid");
+        setTimeout(() => {
+          btnAddPost.classList.remove("invalid");
+        }, 1000);
+      } else {
+        let valueForm = {
+          text: "",
+          x: randomLeft,
+          y: randomTop,
+          color: color,
+        };
+        this.$store
+          .dispatch("fetchPost", {
+            endpoint: "post/",
+            valueForm: valueForm,
+            method: "POST",
+          })
+          .then((response) => response.json())
+          .then((data) => {
+            this.$emit("newPost", data);
+          });
       }
-    }
+    },
+    //Boutton deconnexion vide le store et le sessionStorage
+    disconnect() {
+      this.$store.commit("DISCONNECT");
+      sessionStorage.clear();
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
-.stopPost {
-  color: red !important;
-}
 .container-main-nav {
   display: flex;
   align-items: center;
@@ -114,5 +119,46 @@ export default {
   font-weight: 200;
   color: #33c77c;
   transition: ease-in 0.2s;
+}
+.invalid {
+  animation: shake 0.3s;
+  /* When the animation is finished, start again */
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px);
+  }
+  10% {
+    transform: translate(-1px, -2px);
+  }
+  20% {
+    transform: translate(-1px, 0px);
+  }
+  30% {
+    transform: translate(2px, 1px);
+  }
+  40% {
+    transform: translate(1px, -1px);
+  }
+  50% {
+    transform: translate(-1px, 1px);
+  }
+  60% {
+    transform: translate(-1px, 1px);
+  }
+  70% {
+    transform: translate(2px, 1px);
+  }
+  80% {
+    transform: translate(-1px, -1px);
+  }
+  90% {
+    transform: translate(1px, 2px);
+  }
+  100% {
+    transform: translate(1px, -1px);
+  }
 }
 </style>

@@ -6,8 +6,8 @@ export default createStore({
     enter: false,
     email: "",
     token: "",
-    backgroundColor: "",
-    title: "",
+    backgroundColor: "w1",
+    title: "memento",
     fetchUrl: "http://localhost:3000/api/",
     //"https://rocky-inlet-14615.herokuapp.com/api/"
   },
@@ -23,9 +23,22 @@ export default createStore({
       state.backgroundColor = data.backgroundColor;
       state.title = data.title;
     },
+    ADD_BACKGROUNDCOLOR(state, data) {
+      state.backgroundColor = data.backgroundColor
+    },
+    ADD_TITLE(state, data) {
+      state.title = data.title
+    },
     ADD_ENTER(state, logic) {
       state.enter = logic
-    }
+    },
+    DISCONNECT(state) {
+      state.email = "";
+      state.token = "";
+      state.enter = "";
+      state.backgroundColor = "";
+      state.title = "";
+    },
   },
   actions: {
     fetchAuth(context, { endpoint, method, valueForm }) {
