@@ -194,7 +194,7 @@ $success-bg-color: #e0eee4;
   align-items: center;
   width: 300px;
   margin: 0px auto;
-  padding-bottom: 50px;
+  padding-bottom: 70px;
   padding-top: 10px;
 }
 

@@ -12,7 +12,8 @@
           :key="post"
           :class="post.color"
         >
-          <p class="historic-text">{{ post.text }} {{ post.dates }}</p>
+          <p class="historic-date">{{ moment(post.dates) }}</p>
+          <p class="historic-text">{{ post.text }}</p>
           <div class="historic-action">
             <i
               class="far fa-trash-alt trash-icon"
@@ -44,6 +45,11 @@ export default {
         .then(() => {
           this.posts = this.posts.filter((item) => item != post);
         });
+    },
+    moment(date) {
+      const moment = require("moment");
+      const time = moment(date);
+      return time.format("DD/MM/YY HH:mm");
     },
   },
   mounted: function () {
@@ -129,17 +135,26 @@ export default {
 .historic-posts {
   display: flex;
   align-items: center;
-  height: 10%;
+  height: 15%;
   border-bottom: 2px solid #dda686;
   margin-bottom: 2px;
   border-radius: 98% 0% 95% 0% / 10% 97% 10% 97%;
-  & .historic-text {
-    width: 85%;
+  & .historic-date {
+    width: 15%;
     padding-left: 10px;
     font-size: clamp(12px, 1.1vw, 150px);
     color: #181818e3;
     font-weight: 600;
     font-family: "Indie Flower", cursive;
+  }
+  & .historic-text {
+    width: 70%;
+    height: 70%;
+    font-size: clamp(12px, 1.1vw, 150px);
+    color: #181818e3;
+    font-weight: 600;
+    font-family: "Indie Flower", cursive;
+    overflow-wrap: break-word;
   }
   & .historic-action {
     display: flex;
@@ -149,7 +164,7 @@ export default {
   }
 }
 .trash-icon {
-  font-size: clamp(12px, 1.1vw, 50px);
+  font-size: clamp(12px, 1.3vw, 50px);
   color: #29292977;
   cursor: pointer;
   transition: 0.2s ease;

@@ -3,7 +3,7 @@
     <Navlink v-on:newPost="addPost" />
     <div class="workspace" :class="getBackground">
       <div class="title">
-        <p class="title-color title-color-1">{{ getTitle }}</p>
+        <p class="title-color" :class="getTitleColor">{{ getTitle }}</p>
         <div class="container-fullscreen">
           <i class="fas fa-expand fullscreen-icon" @click="fullScreen"></i>
         </div>
@@ -62,8 +62,8 @@
             placeholder="Ceci est une note !"
             name="text-box"
             id="text-box"
-            rows="4"
             maxlength="60"
+            spellcheck="false"
             @keyup="fetchValue(post)"
           ></textarea>
           <div class="select-color" :class="post.color">
@@ -116,10 +116,6 @@ export default {
           valueForm: valueForm,
           method: "PUT",
         })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("dataOK", data);
-        });
     },
     //Nouveau post, ajoute clée et value dans le tableau "posts"
     addPost(data) {
@@ -130,7 +126,6 @@ export default {
         _id: data._id,
         color: data.color,
       });
-      console.log("dataAddpost", data);
     },
     //Nouveau post devient draggable
     makeDraggable(element) {
@@ -217,16 +212,15 @@ export default {
             this.posts = this.posts.filter((item) => item != post);
           });
 
-          let valueForm = {
+        let valueForm = {
           text: post.text,
           color: post.color,
         };
-        this.$store
-          .dispatch("fetchPost", {
-            endpoint: "oldpost/",
-            valueForm: valueForm,
-            method: "POST",
-          })
+        this.$store.dispatch("fetchPost", {
+          endpoint: "oldpost/",
+          valueForm: valueForm,
+          method: "POST",
+        });
       }, 1000);
     },
     //Affiche l'input et le choix des background-color sous le bouton "crayon"
@@ -256,25 +250,11 @@ export default {
     },
     //Changement couleur pour le bouton "saumon"
     backgroundColorSalmon() {
-      let workspace = document.querySelector(".workspace");
-      let iconMenu = document.querySelectorAll(".icon-menu");
-      let menu = document.querySelector(".menu");
-      //let titleColor = document.querySelector(".title-menu");
-      if (
-        workspace.classList.contains("w2") ||
-        workspace.classList.contains("w3")
-      ) {
-        for (let i = 0; i < iconMenu.length; i++) {
-          iconMenu[i].classList.remove("i2");
-          iconMenu[i].classList.remove("i3");
-          iconMenu[i].classList.add("i1");
-        }
-        menu.classList.remove("m2");
-        menu.classList.remove("m3");
-        menu.classList.add("m1");
-      }
       let valueForm = {
         backgroundColor: "w1",
+        menuColor: "m1",
+        titleColor: "t1",
+        iconColor: "i1",
       };
       this.$store
         .dispatch("fetchPost", {
@@ -289,25 +269,11 @@ export default {
     },
     //Changement couleur pour le bouton "bleu"
     backgroundColorBlue() {
-      let workspace = document.querySelector(".workspace");
-      let iconMenu = document.querySelectorAll(".icon-menu");
-      let menu = document.querySelector(".menu");
-      //let titleColor = document.querySelector(".title-menu");
-      if (
-        workspace.classList.contains("w1") ||
-        workspace.classList.contains("w3")
-      ) {
-        for (let i = 0; i < iconMenu.length; i++) {
-          iconMenu[i].classList.remove("i1");
-          iconMenu[i].classList.remove("i3");
-          iconMenu[i].classList.add("i2");
-        }
-        menu.classList.remove("m1");
-        menu.classList.remove("m3");
-        menu.classList.add("m2");
-      }
       let valueForm = {
         backgroundColor: "w2",
+        menuColor: "m2",
+        titleColor: "t2",
+        iconColor: "i2",
       };
       this.$store
         .dispatch("fetchPost", {
@@ -322,25 +288,11 @@ export default {
     },
     //Changement couleur pour le bouton "vert"
     backgroundColorGreen() {
-      let workspace = document.querySelector(".workspace");
-      let iconMenu = document.querySelectorAll(".icon-menu");
-      let menu = document.querySelector(".menu");
-      //let titleColor = document.querySelector(".title-menu");
-      if (
-        workspace.classList.contains("w1") ||
-        workspace.classList.contains("w2")
-      ) {
-        for (let i = 0; i < iconMenu.length; i++) {
-          iconMenu[i].classList.remove("i1");
-          iconMenu[i].classList.remove("i2");
-          iconMenu[i].classList.add("i3");
-        }
-        menu.classList.remove("m1");
-        menu.classList.remove("m2");
-        menu.classList.add("m3");
-      }
       let valueForm = {
         backgroundColor: "w3",
+        menuColor: "m3",
+        titleColor: "t3",
+        iconColor: "i3"
       };
       this.$store
         .dispatch("fetchPost", {
@@ -457,120 +409,124 @@ export default {
       const tl = gsap.timeline();
       let title = document.querySelector(".input-title");
       if (!title.classList.contains("hidden")) {
-        tl.timeScale(1.5).fromTo(
-          ".input-title",
-          {
-            scale: 0,
-            opacity: 0,
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            ease: "elastic",
-            duration: 2,
-            //delay: 0.1
-          }
-        )
-        .fromTo(
-          ".bg1",
-          {
-            scale: 0,
-            opacity: 0,
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            ease: "elastic",
-            duration: 2,
-            //delay: 0.1
-          }, ">-1.7"
-        )
-        .fromTo(
-          ".bg2",
-          {
-            scale: 0,
-            opacity: 0,
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            ease: "elastic",
-            duration: 2,
-            //delay: 0.1
-          }, ">-1.7"
-        )
-        .fromTo(
-          ".bg3",
-          {
-            scale: 0,
-            opacity: 0,
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            ease: "elastic",
-            duration: 2,
-            //delay: 0.1
-          }, ">-1.7"
-        );
-      // } else {
-      //   tl.fromTo(
-      //     ".input-title",
-      //     {
-      //       scale: 1,
-      //       opacity: 1,
-      //     },
-      //     {
-      //       scale: 0,
-      //       opacity: 0,
-      //       //ease: "elastic",
-      //       duration: 0.4,
-      //     }
-      //   );
-      //   tl.fromTo(
-      //     ".bg1",
-      //     {
-      //       scale: 1,
-      //       opacity: 1,
-      //     },
-      //     {
-      //       scale: 0,
-      //       opacity: 0,
-      //       //ease: "elastic",
-      //       duration: 0.3,
-      //     }
-      //   );
-      //   tl.fromTo(
-      //     ".bg2",
-      //     {
-      //       scale: 1,
-      //       opacity: 1,
-      //     },
-      //     {
-      //       scale: 0,
-      //       opacity: 0,
-      //       //ease: "belastic",
-      //       duration: 0.2,
-      //     }
-      //   );
-      //   tl.fromTo(
-      //     ".bg3",
-      //     {
-      //       scale: 1,
-      //       opacity: 1,
-      //     },
-      //     {
-      //       scale: 0,
-      //       opacity: 0,
-      //       //ease: "elastic",
-      //       duration: 0.4,
-      //     }
-      //   );
-       }
+        tl.timeScale(1.5)
+          .fromTo(
+            ".input-title",
+            {
+              scale: 0,
+              opacity: 0,
+            },
+            {
+              scale: 1,
+              opacity: 1,
+              ease: "elastic",
+              duration: 2,
+              //delay: 0.1
+            }
+          )
+          .fromTo(
+            ".bg1",
+            {
+              scale: 0,
+              opacity: 0,
+            },
+            {
+              scale: 1,
+              opacity: 1,
+              ease: "elastic",
+              duration: 2,
+              //delay: 0.1
+            },
+            ">-1.7"
+          )
+          .fromTo(
+            ".bg2",
+            {
+              scale: 0,
+              opacity: 0,
+            },
+            {
+              scale: 1,
+              opacity: 1,
+              ease: "elastic",
+              duration: 2,
+              //delay: 0.1
+            },
+            ">-1.7"
+          )
+          .fromTo(
+            ".bg3",
+            {
+              scale: 0,
+              opacity: 0,
+            },
+            {
+              scale: 1,
+              opacity: 1,
+              ease: "elastic",
+              duration: 2,
+              //delay: 0.1
+            },
+            ">-1.7"
+          );
+        // } else {
+        //   tl.fromTo(
+        //     ".input-title",
+        //     {
+        //       scale: 1,
+        //       opacity: 1,
+        //     },
+        //     {
+        //       scale: 0,
+        //       opacity: 0,
+        //       //ease: "elastic",
+        //       duration: 0.4,
+        //     }
+        //   );
+        //   tl.fromTo(
+        //     ".bg1",
+        //     {
+        //       scale: 1,
+        //       opacity: 1,
+        //     },
+        //     {
+        //       scale: 0,
+        //       opacity: 0,
+        //       //ease: "elastic",
+        //       duration: 0.3,
+        //     }
+        //   );
+        //   tl.fromTo(
+        //     ".bg2",
+        //     {
+        //       scale: 1,
+        //       opacity: 1,
+        //     },
+        //     {
+        //       scale: 0,
+        //       opacity: 0,
+        //       //ease: "belastic",
+        //       duration: 0.2,
+        //     }
+        //   );
+        //   tl.fromTo(
+        //     ".bg3",
+        //     {
+        //       scale: 1,
+        //       opacity: 1,
+        //     },
+        //     {
+        //       scale: 0,
+        //       opacity: 0,
+        //       //ease: "elastic",
+        //       duration: 0.4,
+        //     }
+        //   );
+      }
     },
   },
   computed: {
-    ...mapGetters(["getTitle", "getBackground"]),
+    ...mapGetters(["getTitle", "getBackground", "getTitleColor"]),
   },
   //Fetch les posts au chargement de la page
   mounted: function () {
@@ -624,6 +580,7 @@ export default {
     );
   }
 }
+//background: linear-gradient(to left, #76b852, #8dc26f); vert pas mal
 .title {
   margin-left: 15%;
   height: 100%;
@@ -632,22 +589,24 @@ export default {
   align-items: flex-end;
   user-select: none;
   //-moz-user-select: none;
+  text-shadow: -1px 0 rgba(0, 0, 0, 0.116), 0 1px rgba(0, 0, 0, 0.123),
+      1px 0 rgba(0, 0, 0, 0.123), 0 -1px rgba(0, 0, 0, 0.123);
   & p {
     position: relative;
-    font-size: 15vw;
+    font-size: 12vw;
     font-family: "Gloria Hallelujah", cursive;
-    //filter: blur(2px);
+    filter: blur(.5px);
     opacity: 0.5;
   }
 }
-.title-color-1 {
+.t1 {
   color: #f8ae6dea;
 }
-.title-color-2 {
+.t2 {
   color: #6d7bf859;
 }
-.title-color-3 {
-  color: #6df86d75;
+.t3 {
+  color: #6cec6cc9;
 }
 .container-input-title {
   position: absolute;
@@ -668,8 +627,6 @@ export default {
     border: none;
     outline: none;
     border-radius: 5px;
-    //background: none;
-    //border-bottom: 2px solid #fbcfc9;
     color: #292929;
     font-size: clamp(12px, 1.2vw, 30px);
     font-family: "Raleway", sans-serif;
@@ -773,10 +730,11 @@ export default {
   resize: none;
   border: none;
   border-top: rgba(0, 0, 0, 0.349) 4px solid;
-  font-size: clamp(12px, 1.1vw, 150px);
+  font-size: 20px;
   color: #181818e3;
   font-weight: 600;
   font-family: "Indie Flower", cursive;
+  //overflow: hidden;
 }
 .trash-icon {
   position: absolute;

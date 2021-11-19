@@ -1,11 +1,12 @@
 <template>
   <div class="container-main-nav">
-    <div class="menu m1">
-      <i @click="addPost()" class="far fa-plus-square icon-menu i1 plus"></i>
-      <a href="/profile"><i class="far fa-address-card icon-menu i1"></i></a>
+    <div class="menu" :class="getMenuColor">
+      <i @click="addPost()" class="far fa-plus-square icon-menu plus" :class="getIconColor"></i>
+      <a href="/profile"><i class="far fa-history icon-menu" :class="getIconColor"></i></a>
       <a href="/"
         ><i
-          class="fas fa-sign-out-alt icon-menu i1 profile"
+          class="fas fa-sign-out-alt icon-menu profile"
+          :class="getIconColor"
           @click="disconnect"
         ></i
       ></a>
@@ -14,6 +15,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -59,7 +61,11 @@ export default {
     disconnect() {
       this.$store.commit("DISCONNECT");
       sessionStorage.clear();
+      localStorage.clear();
     },
+  },
+  computed: {
+    ...mapGetters(["getMenuColor", "getIconColor"]),
   },
 };
 </script>

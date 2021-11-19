@@ -7,6 +7,9 @@ export default createStore({
     email: "",
     token: "",
     backgroundColor: "w1",
+    menuColor: "m1",
+    titleColor: "t1",
+    iconColor: "i1",
     title: "memento",
     fetchUrl: "http://localhost:3000/api/",
     //"https://rocky-inlet-14615.herokuapp.com/api/"
@@ -14,17 +17,26 @@ export default createStore({
   getters: {
     getEnter: (state) => state.enter,
     getTitle: (state) => state.title,
-    getBackground: (state) => state.backgroundColor
+    getBackground: (state) => state.backgroundColor,
+    getMenuColor: (state) => state.menuColor,
+    getTitleColor: (state) => state.titleColor,
+    getIconColor: (state) => state.iconColor,
   },
   mutations: {
     ADD_PROFILE(state, data) {
       state.token = data.token;
       state.email = data.email;
       state.backgroundColor = data.backgroundColor;
+      state.menuColor = data.menuColor;
+      state.titleColor = data.titleColor;
+      state.iconColor = data.iconColor;
       state.title = data.title;
     },
     ADD_BACKGROUNDCOLOR(state, data) {
       state.backgroundColor = data.backgroundColor
+      state.menuColor = data.menuColor
+      state.titleColor = data.titleColor
+      state.iconColor = data.iconColor
     },
     ADD_TITLE(state, data) {
       state.title = data.title
@@ -36,7 +48,6 @@ export default createStore({
       state.email = "";
       state.token = "";
       state.enter = "";
-      state.backgroundColor = "";
       state.title = "";
     },
   },

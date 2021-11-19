@@ -12,6 +12,9 @@ exports.signup = (req, res, next) => {
       const user = new User({
         email: req.body.email,
         backgroundColor: "w1",
+        menuColor: "m1",
+        titleColor: "t1",
+        iconColor: "i1",
         title: "memento",
         password: hash,
       });
@@ -21,6 +24,9 @@ exports.signup = (req, res, next) => {
           res.status(201).json({
             email: user.email,
             backgroundColor: user.backgroundColor,
+            menuColor: user.menuColor,
+            titleColor: user.titleColor,
+            iconColor: user.iconColor,
             title: user.title,
             token: jwt.sign(
               // Création d'un token
@@ -52,6 +58,9 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             email: user.email,
             backgroundColor: user.backgroundColor,
+            menuColor: user.menuColor,
+            titleColor: user.titleColor,
+            iconColor: user.iconColor,
             title: user.title,
             token: jwt.sign(
               // Création d'un token
@@ -71,16 +80,22 @@ exports.modifyUser = (req, res, next) => {
     { _id: res.locals.userId },
     {
       backgroundColor: req.body.backgroundColor,
+      menuColor: req.body.menuColor,
+      titleColor: req.body.titleColor,
+      iconColor: req.body.iconColor,
       title: req.body.title,
     }
-  ).then(() => {
-    User.findOne({ _id: res.locals.userId })
-      .then((user) =>
+  )
+    .then(() => {
+      User.findOne({ _id: res.locals.userId }).then((user) =>
         res.status(201).json({
           title: user.title,
           backgroundColor: user.backgroundColor,
+          menuColor: user.menuColor,
+          titleColor: user.titleColor,
+          iconColor: user.iconColor,
         })
-      )
-  })
-  .catch((error) => res.status(400).json({ error }));
+      );
+    })
+    .catch((error) => res.status(400).json({ error }));
 };
