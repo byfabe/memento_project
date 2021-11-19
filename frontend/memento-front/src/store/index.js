@@ -11,8 +11,8 @@ export default createStore({
     titleColor: "t1",
     iconColor: "i1",
     title: "memento",
-    fetchUrl: "http://localhost:3000/api/",
-    //"https://rocky-inlet-14615.herokuapp.com/api/"
+    fetchUrl: "https://rocky-inlet-14615.herokuapp.com/api/",
+    //"https://rocky-inlet-14615.herokuapp.com/api/" // http://localhost:3000/api/
   },
   getters: {
     getEnter: (state) => state.enter,

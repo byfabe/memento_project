@@ -84,7 +84,7 @@ export default {
   top: 20%;
   margin-left: 1%;
   width: clamp(150px, 15vw, 200px);
-  height: clamp(350px, 50%, 500px);
+  height: clamp(250px, 50%, 500px);
   border-radius: 98% 2% 95% 5% / 3% 97% 3% 97%;
   & .plus {
     cursor: pointer;

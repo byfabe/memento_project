@@ -82,6 +82,9 @@
           </div>
         </div>
       </transition-group>
+      <div class="signature">
+        <a href="mailto:byfabe@gmail.com" class="link-signature">- Made by Fabien R. -</a>
+      </div>
     </div>
   </div>
 </template>
@@ -110,12 +113,11 @@ export default {
       let valueForm = {
         text: post.text,
       };
-      this.$store
-        .dispatch("fetchPost", {
-          endpoint: "post/" + post._id,
-          valueForm: valueForm,
-          method: "PUT",
-        })
+      this.$store.dispatch("fetchPost", {
+        endpoint: "post/" + post._id,
+        valueForm: valueForm,
+        method: "PUT",
+      });
     },
     //Nouveau post, ajoute clée et value dans le tableau "posts"
     addPost(data) {
@@ -292,7 +294,7 @@ export default {
         backgroundColor: "w3",
         menuColor: "m3",
         titleColor: "t3",
-        iconColor: "i3"
+        iconColor: "i3",
       };
       this.$store
         .dispatch("fetchPost", {
@@ -590,23 +592,23 @@ export default {
   user-select: none;
   //-moz-user-select: none;
   text-shadow: -1px 0 rgba(0, 0, 0, 0.116), 0 1px rgba(0, 0, 0, 0.123),
-      1px 0 rgba(0, 0, 0, 0.123), 0 -1px rgba(0, 0, 0, 0.123);
+    1px 0 rgba(0, 0, 0, 0.123), 0 -1px rgba(0, 0, 0, 0.123);
   & p {
     position: relative;
-    font-size: 12vw;
+    font-size: 8vw;
     font-family: "Gloria Hallelujah", cursive;
-    filter: blur(.5px);
+    filter: blur(0.5px);
     opacity: 0.5;
   }
 }
 .t1 {
-  color: #f8ae6dea;
+  color: #f8ae6d;
 }
 .t2 {
   color: #6d7bf859;
 }
 .t3 {
-  color: #6cec6cc9;
+  color: #256e25;
 }
 .container-input-title {
   position: absolute;
@@ -804,6 +806,25 @@ export default {
 }
 .hidden {
   visibility: hidden;
+}
+.signature {
+  .link-signature {
+    position: absolute;
+    bottom: 2%;
+    font-size: 0.9vw;
+    padding-left: 30px;
+    color: #000000c0;
+    text-decoration: none;
+    font-family: "Indie Flower", cursive;
+    font-weight: 600;
+    transition: 0.2s ease;
+    transform: rotate(-3deg);
+    &:hover {
+      transform: scale(1.1);
+      transition: 0.2s ease;
+      color: #000000;
+    }
+  }
 }
 </style>
 
