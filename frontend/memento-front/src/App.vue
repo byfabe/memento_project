@@ -1,11 +1,6 @@
 <template>
   <div id="nav">
-    <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
-        <component :is="Component"></component>
-      </transition>
-    </router-view>
-
+    <router-view />
   </div>
 </template>
 
@@ -20,7 +15,7 @@
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity  1.5s ease;
+  transition: opacity  0.2s ease;
 }
 
 .fade-enter-from,
@@ -34,3 +29,9 @@
     display: none;
 }
 </style>
+
+// <router-view v-slot="{ Component }">
+//       <transition name="fade" mode="out-in">
+//         <component :is="Component"></component>
+//       </transition>
+//     </router-view>

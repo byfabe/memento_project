@@ -2,8 +2,8 @@
   <div class="container-main-nav">
     <div class="menu" :class="getMenuColor">
       <i @click="addPost()" class="far fa-plus-square icon-menu plus" :class="getIconColor"></i>
-      <a href="/profile"><i class="far fa-history icon-menu" :class="getIconColor"></i></a>
-      <a href="/"
+      <a href="#/profile"><i class="far fa-history icon-menu" :class="getIconColor"></i></a>
+      <a href="#/"
         ><i
           class="fas fa-sign-out-alt icon-menu profile"
           :class="getIconColor"

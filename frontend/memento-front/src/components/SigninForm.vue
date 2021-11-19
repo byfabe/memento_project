@@ -32,7 +32,8 @@
       <div class="forgotpassword">
         <a href="">Mot de passe oublié ?</a>
         <span class="space-forgotpassword">|</span>
-        <a href="/signup">Créer un compte</a>
+        <router-link to="signup">Créer un compte</router-link>
+        <!-- <a href="#/signup">Créer un compte</a> -->
       </div>
     </div>
   </div>
@@ -76,7 +77,7 @@ export default {
         })
         .then((data) => {
           if (data.token) {
-            document.location.href = "/board";
+            document.location.href = "#/board";
           }
         });
     }

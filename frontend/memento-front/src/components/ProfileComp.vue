@@ -1,6 +1,6 @@
 <template>
   <div class="container-main-profilecomp">
-    <a href="/board"> <i class="far fa-chevron-left back-icon"></i></a>
+    <a href="#/board"> <i class="far fa-chevron-left back-icon"></i></a>
     <div class="container-profile background-color">
       <div class="box-profile">
         <div class="top-profile">
