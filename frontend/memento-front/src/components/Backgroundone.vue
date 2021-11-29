@@ -83,7 +83,9 @@
         </div>
       </transition-group>
       <div class="signature">
-        <a href="mailto:byfabe@gmail.com" class="link-signature">- Made by Fabien R. -</a>
+        <a href="mailto:byfabe@gmail.com" class="link-signature"
+          >- Made by Fabien R. -</a
+        >
       </div>
     </div>
   </div>
@@ -558,28 +560,45 @@ export default {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-      90deg,
-      hsla(29, 92%, 70%, 1) 0%,
-      hsla(0, 87%, 73%, 1) 100%
+      to right,
+      rgb(126, 45, 79),
+      rgb(161, 87, 87)
     );
+    //animation: gradient 30s ease infinite;
+    //background-size: 400% 400%;
   }
   & .w2 {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-      90deg,
-      hsla(171, 87%, 67%, 1) 0%,
-      hsla(236, 100%, 72%, 1) 100%
+      to right,
+      rgb(30, 89, 126),
+      rgb(73, 146, 136)
     );
+    //animation: gradient 30s ease infinite;
+    //background-size: 400% 400%;
   }
   & .w3 {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-      90deg,
-      hsla(145, 84%, 73%, 1) 0%,
-      hsla(150, 61%, 48%, 1) 100%
+      to right,
+      rgb(25, 99, 56),
+      hsla(150, 61%, 48%, 1)
     );
+    //animation: gradient 30s ease infinite;
+    //background-size: 400% 400%;
+  }
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 //background: linear-gradient(to left, #76b852, #8dc26f); vert pas mal
@@ -605,10 +624,10 @@ export default {
   color: #f8ae6d;
 }
 .t2 {
-  color: #6d7bf859;
+  color: #412957;
 }
 .t3 {
-  color: #256e25;
+  color: #91b933;
 }
 .container-input-title {
   position: absolute;
@@ -637,7 +656,7 @@ export default {
   & .pencil-icon {
     font-size: clamp(12px, 1.5vw, 30px);
     color: #f1f1f1bb;
-    border: 3px solid #f1f1f1bb;
+    border: 3px solid #f1f1f19f;
     padding: 15px;
     border-radius: 10px;
     cursor: pointer;
@@ -659,23 +678,23 @@ export default {
   }
   & .bg1 {
     background: linear-gradient(
-      90deg,
-      hsla(29, 92%, 70%, 1) 0%,
-      hsla(0, 87%, 73%, 1) 100%
+      to right,
+      rgb(126, 45, 79),
+      rgb(161, 87, 87)
     );
   }
   & .bg2 {
     background: linear-gradient(
-      90deg,
-      hsla(171, 87%, 67%, 1) 0%,
-      hsla(236, 100%, 72%, 1) 100%
+      to right,
+      rgb(30, 89, 126),
+      rgb(73, 146, 134)
     );
   }
   & .bg3 {
     background: linear-gradient(
-      90deg,
-      hsla(145, 84%, 73%, 1) 0%,
-      hsla(150, 61%, 48%, 1) 100%
+      to right,
+      rgb(25, 99, 56),
+      hsla(150, 61%, 48%, 1)
     );
   }
 }
@@ -693,7 +712,7 @@ export default {
   & .fullscreen-icon {
     font-size: clamp(12px, 1.5vw, 30px);
     color: #f1f1f1bb;
-    border: 3px solid #f1f1f1bb;
+    border: 3px solid #f1f1f19f;
     padding: 15px;
     border-radius: 10px;
     cursor: pointer;

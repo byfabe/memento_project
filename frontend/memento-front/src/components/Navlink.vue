@@ -91,16 +91,16 @@ export default {
   }
 }
 .m1 {
-  box-shadow: 13px 11px 15px -15px #f76e6e;
-  border: 3px solid #f76e6e;
+  box-shadow: 13px 11px 15px -15px #552134;
+  border: 3px solid #5a233769;
 }
 .m2 {
-  box-shadow: 13px 11px 15px -15px rgba(0, 98, 128, 0.836);
-  border: 3px solid rgba(0, 98, 128, 0.836);
+  box-shadow: 13px 11px 15px -15px rgb(13, 38, 54);
+  border: 3px solid rgba(14, 41, 58, 0.473);
 }
 .m3 {
-  box-shadow: 13px 11px 15px -15px #33c77c;
-  border: 3px solid #33c77c;
+  box-shadow: 13px 11px 15px -15px rgb(16, 61, 35);
+  border: 3px solid rgba(14, 54, 31, 0.349);
 }
 .icon-menu {
   &:hover {
@@ -111,19 +111,19 @@ export default {
 .i1 {
   font-size: clamp(15px, 3.5vw, 80px);
   font-weight: 200;
-  color: #f76e6e;
+  color: #be537c;
   transition: ease-in 0.2s;
 }
 .i2 {
   font-size: clamp(15px, 3.5vw, 80px);
   font-weight: 200;
-  color: rgba(0, 98, 128, 0.836);
+  color: rgba(67, 156, 184, 0.836);
   transition: ease-in 0.2s;
 }
 .i3 {
   font-size: clamp(15px, 3.5vw, 80px);
   font-weight: 200;
-  color: #33c77c;
+  color: #319e52;
   transition: ease-in 0.2s;
 }
 .invalid {
